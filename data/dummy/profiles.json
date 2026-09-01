@@ -1,0 +1,21 @@
+[
+  {
+    "official_id": "123e4567-e89b-12d3-a456-426614174000",
+    "role": "Analyst",
+    "dept": "Statistics",
+    "education": "M.Sc. Statistics",
+    "experience_years": 3,
+    "past_trainings": [
+      {
+        "course_name": "Basic Python",
+        "completed_at": "2026-08-31T19:32:42.754641"
+      }
+    ],
+    "profile_stored": true,
+    "graph_node_added": true,
+    "initial_levels": {
+      "digital_tools": 1,
+      "statistical_methods": 2
+    }
+  }
+]

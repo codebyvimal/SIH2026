@@ -1,0 +1,19 @@
+[
+  {
+    "quiz_id": "quiz-stats-01",
+    "source_filename": "sample_stats.pdf",
+    "questions": [
+      {
+        "q": "What is a p-value?",
+        "options": [
+          "Probability of null given data",
+          "Probability of data given null",
+          "A test statistic",
+          "Power of the test"
+        ],
+        "correct": 1,
+        "explanation": "A p-value is the probability of observing data as extreme as yours, assuming the null hypothesis is true."
+      }
+    ]
+  }
+]

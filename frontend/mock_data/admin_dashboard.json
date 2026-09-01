@@ -1,0 +1,19 @@
+{
+  "total_officials": 500,
+  "domain_aggregates": [
+    {
+      "domain": "digital_tools",
+      "avg_gap": 1.2,
+      "officials_below_target": 150
+    },
+    {
+      "domain": "statistical_methods",
+      "avg_gap": 0.5,
+      "officials_below_target": 50
+    }
+  ],
+  "top_recommended_courses": [
+    "Advanced Python Analytics",
+    "Applied Statistics"
+  ]
+}

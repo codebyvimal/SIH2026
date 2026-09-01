@@ -1,0 +1,14 @@
+[
+  {
+    "course_id": "course-igot-101",
+    "title": "Advanced Python Analytics",
+    "provider": "iGOT",
+    "duration_hours": 10
+  },
+  {
+    "course_id": "course-nssta-01",
+    "title": "Applied Statistics",
+    "provider": "NSSTA",
+    "duration_hours": 20
+  }
+]

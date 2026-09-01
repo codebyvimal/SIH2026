@@ -1,0 +1,20 @@
+{
+  "skills": [
+    {
+      "skill": "Python for Data Analysis",
+      "domain": "digital_tools",
+      "required_by_role": {
+        "Data Scientist": 4,
+        "Analyst": 3
+      }
+    },
+    {
+      "skill": "Statistical Inference",
+      "domain": "statistical_methods",
+      "required_by_role": {
+        "Data Scientist": 4,
+        "Analyst": 2
+      }
+    }
+  ]
+}

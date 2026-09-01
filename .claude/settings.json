@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx skills:*)",
+      "Bash(ruff:*)",
+      "Bash(prettier:*)",
+      "Bash(eslint:*)",
+      "Bash(pytest:*)",
+      "Bash(git:*)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
+    ],
+    "additionalDirectories": []
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'command -v ruff >/dev/null && ruff format --quiet . 2>/dev/null && ruff check --fix --quiet . 2>/dev/null; exit 0'",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
