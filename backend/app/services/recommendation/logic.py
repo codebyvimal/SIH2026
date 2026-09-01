@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 
 import faiss
 import google.generativeai as genai
 import instructor
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 
@@ -18,6 +20,8 @@ from backend.app.shared.schemas import (
     RecommendedCourse,
 )
 
+load_dotenv()
+
 _COURSES_PATH = pathlib.Path('data/dummy/courses.json')
 _EMBED_MODEL_NAME = 'all-MiniLM-L6-v2'
 _TOP_K = 5
@@ -26,15 +30,25 @@ _TOP_K = 5
 COURSES: list[IgotCourse] = [IgotCourse(**c) for c in json.loads(_COURSES_PATH.read_text())]
 _embed_model: SentenceTransformer = SentenceTransformer(_EMBED_MODEL_NAME)
 _faiss_index: faiss.IndexFlatL2 | None = None
-
-_genai_client = instructor.from_gemini(
-    client=genai.GenerativeModel('gemini-2.5-flash'),
-    mode=instructor.Mode.GEMINI_JSON,
-)
+_genai_client: instructor.Instructor | None = None
 
 
 class _LLMReRankOutput(BaseModel):
     recommended: list[RecommendedCourse]
+
+
+def _get_genai_client() -> instructor.Instructor:
+    global _genai_client
+    if _genai_client is None:
+        api_key = os.getenv('GEMINI_API_KEY')
+        if not api_key:
+            raise RuntimeError('GEMINI_API_KEY environment variable not set.')
+        genai.configure(api_key=api_key)
+        _genai_client = instructor.from_gemini(
+            client=genai.GenerativeModel('gemini-2.5-flash'),
+            mode=instructor.Mode.GEMINI_JSON,
+        )
+    return _genai_client
 
 
 def _get_index() -> faiss.IndexFlatL2:
@@ -74,6 +88,7 @@ def llm_rerank(
     candidates: list[tuple[IgotCourse, float]],
 ) -> RecommendationOutput:
     """Call Gemini via Instructor to re-rank candidates and produce why justifications."""
+    client = _get_genai_client()
     candidate_text = '\n'.join(
         f'- [{c.course_id}] "{c.title}" ({c.provider}, {c.duration_hours}h) — FAISS score: {score:.3f}'
         for c, score in candidates
@@ -84,7 +99,7 @@ def llm_rerank(
         f'{candidate_text}\n\n'
         f'Return relevance score (0.0–1.0) and a concise "why" for each course.'
     )
-    result = _genai_client.chat.completions.create(
+    result = client.chat.completions.create(
         messages=[{'role': 'user', 'content': prompt}],
         response_model=_LLMReRankOutput,
     )
