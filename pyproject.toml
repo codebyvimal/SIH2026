@@ -8,6 +8,9 @@ quote-style = "single"
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = "-v --asyncio-mode=auto"
+pythonpath = [
+    ".",
+]
 testpaths = [
     "backend",
 ]

@@ -1,5 +1,6 @@
 # Dependencies / build artifacts
 node_modules/
+.vite/
 .next/
 out/
 dist/
@@ -30,3 +31,5 @@ Thumbs.db
 
 # NOTE: .agents/, .claude/, and skills-lock.json are intentionally NOT ignored.
 # They ship in the repo so every clone already has the skills and rules.
+data/dummy/*.db
+data/dummy/*.gpickle
