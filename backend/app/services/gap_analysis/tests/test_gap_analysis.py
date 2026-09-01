@@ -1,8 +1,11 @@
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from backend.app.services.gap_analysis.router import router
 
-client = TestClient(router)
+app = FastAPI()
+app.include_router(router)
+client = TestClient(app)
 
 def test_gap_analysis_calculates_correctly():
     payload = {
