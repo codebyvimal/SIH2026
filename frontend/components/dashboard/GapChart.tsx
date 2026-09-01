@@ -23,16 +23,16 @@ export default function GapChart({ gaps }: GapChartProps) {
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart cx="50%" cy="50%" outerRadius="65%" data={data}>
           <PolarGrid gridType="polygon" stroke="#e2e8f0" />
-          <PolarAngleAxis 
-            dataKey="skill" 
-            tick={{ fill: '#475569', fontSize: 11, fontWeight: 500 }} 
+          <PolarAngleAxis
+            dataKey="skill"
+            tick={{ fill: '#475569', fontSize: 11, fontWeight: 500 }}
           />
-          <PolarRadiusAxis 
-            angle={90} 
-            domain={[0, 100]} 
-            tick={{ fill: '#94a3b8', fontSize: 10 }} 
-            tickCount={5} 
-            axisLine={false} 
+          <PolarRadiusAxis
+            angle={90}
+            domain={[0, 100]}
+            tick={{ fill: '#94a3b8', fontSize: 10 }}
+            tickCount={5}
+            axisLine={false}
           />
           <Radar
             name="Current Skill"
@@ -49,7 +49,7 @@ export default function GapChart({ gaps }: GapChartProps) {
             strokeDasharray="4 4"
             fill="none"
           />
-          <Legend 
+          <Legend
             wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }}
             iconType="plainline"
             formatter={(value) => <span className="text-slate-600 font-medium ml-1">{value}</span>}

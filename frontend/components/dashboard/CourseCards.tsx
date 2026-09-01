@@ -28,10 +28,10 @@ export default function CourseCards({ courses }: CourseCardsProps) {
           >
             {/* Left: Course Image */}
             <div className="h-48 w-full shrink-0 sm:h-auto sm:w-[220px]">
-              <img 
-                src={imageSrc} 
-                alt={c.course} 
-                className="h-full w-full rounded-xl object-cover" 
+              <img
+                src={imageSrc}
+                alt={c.course}
+                className="h-full w-full rounded-xl object-cover"
               />
             </div>
 
@@ -46,7 +46,7 @@ export default function CourseCards({ courses }: CourseCardsProps) {
                   <h3 className="mt-1 text-lg font-bold text-slate-800">
                     {c.course}
                   </h3>
-                  
+
                   {/* Stats Row */}
                   <div className="mt-2 flex items-center gap-2 text-xs font-medium text-slate-600">
                     <span className="flex items-center gap-1 text-amber-500">

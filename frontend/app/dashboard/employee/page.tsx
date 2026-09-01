@@ -49,10 +49,10 @@ export default function EmployeeDashboardPage() {
       {/* Main Content */}
       <main className="mx-auto max-w-7xl p-6">
         <div className="grid gap-6 lg:grid-cols-12">
-          
+
           {/* Left Column: Profile & Radar Chart */}
           <div className="space-y-6 lg:col-span-4">
-            
+
             {/* Profile Card */}
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
@@ -93,7 +93,7 @@ export default function EmployeeDashboardPage() {
               <h3 className="mb-4 text-base font-bold text-slate-800">Skill Gap Overview</h3>
               <GapChart gaps={data.gaps} />
             </section>
-            
+
             {/* Quiz Feedback (Extra data from schema not in image) */}
             {data.latest_grading && (
                <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -111,9 +111,9 @@ export default function EmployeeDashboardPage() {
                 <h2 className="text-lg font-bold text-slate-800">Recommended for You</h2>
                 <p className="text-sm text-slate-500">Based on your skill gaps and role</p>
               </div>
-              
+
               <CourseCards courses={data.recommended} />
-              
+
               <div className="mt-6 flex justify-center">
                 <button className="rounded-lg border border-blue-200 px-6 py-2.5 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors">
                   View All Recommendations &gt;
@@ -121,7 +121,7 @@ export default function EmployeeDashboardPage() {
               </div>
             </section>
           </div>
-          
+
         </div>
       </main>
     </div>
