@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-<<<<<<< HEAD
 from backend.app.services.gap_analysis.router import router as gap_analysis_router
 from backend.app.services.profile.router import router as profile_router
 from backend.app.services.recommendation.router import router as recommendation_router
