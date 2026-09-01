@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 from datetime import datetime
 from enum import Enum
+
 from pydantic import BaseModel, Field
 
 
 class SkillLevel(int, Enum):
     """0 = no exposure, 4 = expert. Used for both required and current levels."""
+
     NONE = 0
     BASIC = 1
     WORKING = 2
@@ -15,10 +18,11 @@ class SkillLevel(int, Enum):
 
 class Domain(str, Enum):
     """The 4 hardcoded competency domains in data/dummy/framework.json."""
-    STATISTICAL_METHODS = 'statistical_methods'
-    DATA_MANAGEMENT = 'data_management'
-    DOMAIN_KNOWLEDGE = 'domain_knowledge'
-    DIGITAL_TOOLS = 'digital_tools'
+
+    STATISTICAL_METHODS = "statistical_methods"
+    DATA_MANAGEMENT = "data_management"
+    DOMAIN_KNOWLEDGE = "domain_knowledge"
+    DIGITAL_TOOLS = "digital_tools"
 
 
 class PastTraining(BaseModel):
@@ -35,10 +39,10 @@ class ProfileInput(BaseModel):
 
 
 class ProfileOutput(BaseModel):
-    official_id: str                       # UUID string, generated on creation
+    official_id: str  # UUID string, generated on creation
     profile_stored: bool
     graph_node_added: bool
-    initial_levels: dict[Domain, SkillLevel]   # seeded from role + past_trainings
+    initial_levels: dict[Domain, SkillLevel]  # seeded from role + past_trainings
 
 
 class GapAnalysisInput(BaseModel):
@@ -51,7 +55,7 @@ class SkillGap(BaseModel):
     domain: Domain
     required: SkillLevel
     current: SkillLevel
-    gap: int = Field(ge=0)                 # required.value - current.value, floored at 0
+    gap: int = Field(ge=0)  # required.value - current.value, floored at 0
 
 
 class GapAnalysisOutput(BaseModel):
@@ -62,7 +66,7 @@ class GapAnalysisOutput(BaseModel):
 class FrameworkSkill(BaseModel):
     skill: str
     domain: Domain
-    required_by_role: dict[str, SkillLevel]   # role name -> required level
+    required_by_role: dict[str, SkillLevel]  # role name -> required level
 
 
 class CompetencyFramework(BaseModel):
@@ -77,8 +81,8 @@ class RecommendationInput(BaseModel):
 class RecommendedCourse(BaseModel):
     course: str
     course_id: str
-    relevance: float = Field(ge=0.0, le=1.0)   # FAISS similarity, then LLM-adjusted
-    why: str                                    # short LLM-generated justification
+    relevance: float = Field(ge=0.0, le=1.0)  # FAISS similarity, then LLM-adjusted
+    why: str  # short LLM-generated justification
 
 
 class RecommendationOutput(BaseModel):
@@ -88,7 +92,7 @@ class RecommendationOutput(BaseModel):
 class IgotCourse(BaseModel):
     course_id: str
     title: str
-    provider: str                # 'iGOT' | 'NSSTA'
+    provider: str  # 'iGOT' | 'NSSTA'
     duration_hours: int
 
 
@@ -99,7 +103,7 @@ class EnrollRequest(BaseModel):
 
 class EnrollResponse(BaseModel):
     enrollment_id: str
-    status: str                  # 'enrolled'
+    status: str  # 'enrolled'
 
 
 class CompletionStatus(BaseModel):
@@ -111,7 +115,7 @@ class CompletionStatus(BaseModel):
 class QuizQuestion(BaseModel):
     q: str
     options: list[str] = Field(min_length=4, max_length=4)
-    correct: int = Field(ge=0, le=3)      # index into options
+    correct: int = Field(ge=0, le=3)  # index into options
     explanation: str
 
 
@@ -123,7 +127,7 @@ class AssessmentOutput(BaseModel):
 
 class GradingInput(BaseModel):
     quiz_id: str
-    answers: dict[int, int]        # question index -> chosen option index
+    answers: dict[int, int]  # question index -> chosen option index
 
 
 class QuestionFeedback(BaseModel):
@@ -142,9 +146,9 @@ class GradingOutput(BaseModel):
 
 class EmployeeDashboard(BaseModel):
     official_id: str
-    gaps: list[SkillGap]                     # from System 2
-    recommended: list[RecommendedCourse]     # from System 3
-    latest_grading: GradingOutput | None     # from System 6
+    gaps: list[SkillGap]  # from System 2
+    recommended: list[RecommendedCourse]  # from System 3
+    latest_grading: GradingOutput | None  # from System 6
 
 
 class DomainAggregate(BaseModel):
@@ -156,4 +160,4 @@ class DomainAggregate(BaseModel):
 class AdminDashboard(BaseModel):
     total_officials: int
     domain_aggregates: list[DomainAggregate]
-    top_recommended_courses: list[str]       # course titles, ranked by enrollment count
+    top_recommended_courses: list[str]  # course titles, ranked by enrollment count
