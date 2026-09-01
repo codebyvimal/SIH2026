@@ -44,8 +44,9 @@ def _get_genai_client() -> instructor.Instructor:
         if not api_key:
             raise RuntimeError('GEMINI_API_KEY environment variable not set.')
         genai.configure(api_key=api_key)
+        raw_client = genai.GenerativeModel('gemini-3.6-flash')
         _genai_client = instructor.from_gemini(
-            client=genai.GenerativeModel('gemini-2.5-flash'),
+            client=raw_client,
             mode=instructor.Mode.GEMINI_JSON,
         )
     return _genai_client

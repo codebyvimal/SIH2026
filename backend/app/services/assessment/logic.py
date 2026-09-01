@@ -6,10 +6,13 @@ import uuid
 
 import google.generativeai as genai
 import instructor
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from pypdf import PdfReader
 
 from backend.app.shared.schemas import AssessmentOutput, QuizQuestion
+
+load_dotenv()
 
 _NAMESPACE = uuid.UUID("6ba7b810-9dad-11d1-80b4-00c04fd430c8")  # URL namespace
 
@@ -36,7 +39,7 @@ def generate_quiz(pdf_bytes: bytes, filename: str) -> AssessmentOutput:
         raise RuntimeError("GEMINI_API_KEY environment variable not set.")
 
     genai.configure(api_key=api_key)
-    raw_client = genai.GenerativeModel(model_name="gemini-2.5-flash")
+    raw_client = genai.GenerativeModel(model_name="gemini-3.6-flash")
     client = instructor.from_gemini(raw_client, mode=instructor.Mode.GEMINI_JSON)
 
     prompt = (
