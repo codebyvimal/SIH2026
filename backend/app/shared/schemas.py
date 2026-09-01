@@ -19,10 +19,10 @@ class SkillLevel(int, Enum):
 class Domain(str, Enum):
     """The 4 hardcoded competency domains in data/dummy/framework.json."""
 
-    STATISTICAL_METHODS = 'statistical_methods'
-    DATA_MANAGEMENT = 'data_management'
-    DOMAIN_KNOWLEDGE = 'domain_knowledge'
-    DIGITAL_TOOLS = 'digital_tools'
+    STATISTICAL_METHODS = "statistical_methods"
+    DATA_MANAGEMENT = "data_management"
+    DOMAIN_KNOWLEDGE = "domain_knowledge"
+    DIGITAL_TOOLS = "digital_tools"
 
 
 class PastTraining(BaseModel):
