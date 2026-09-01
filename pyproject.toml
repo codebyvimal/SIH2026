@@ -14,4 +14,3 @@ pythonpath = [
 testpaths = [
     "backend",
 ]
-
