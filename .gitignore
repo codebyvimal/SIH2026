@@ -1,5 +1,6 @@
 # Dependencies / build artifacts
 node_modules/
+.vite/
 .next/
 out/
 dist/
