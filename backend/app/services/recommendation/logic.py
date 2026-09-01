@@ -1,20 +1,21 @@
 """Recommendation logic: FAISS semantic search + Gemini LLM re-rank."""
+
 from __future__ import annotations
 
 import json
 import pathlib
 
 import faiss
-import instructor
 import google.generativeai as genai
+import instructor
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 
 from backend.app.shared.schemas import (
     IgotCourse,
-    RecommendedCourse,
     RecommendationInput,
     RecommendationOutput,
+    RecommendedCourse,
 )
 
 _COURSES_PATH = pathlib.Path('data/dummy/courses.json')
@@ -22,9 +23,7 @@ _EMBED_MODEL_NAME = 'all-MiniLM-L6-v2'
 _TOP_K = 5
 
 # Module-level singletons — built once at startup
-COURSES: list[IgotCourse] = [
-    IgotCourse(**c) for c in json.loads(_COURSES_PATH.read_text())
-]
+COURSES: list[IgotCourse] = [IgotCourse(**c) for c in json.loads(_COURSES_PATH.read_text())]
 _embed_model: SentenceTransformer = SentenceTransformer(_EMBED_MODEL_NAME)
 _faiss_index: faiss.IndexFlatL2 | None = None
 
@@ -41,9 +40,9 @@ class _LLMReRankOutput(BaseModel):
 def _get_index() -> faiss.IndexFlatL2:
     global _faiss_index
     if _faiss_index is None:
-        embeddings = _embed_model.encode(
-            [c.title for c in COURSES], convert_to_numpy=True
-        ).astype('float32')
+        embeddings = _embed_model.encode([c.title for c in COURSES], convert_to_numpy=True).astype(
+            'float32'
+        )
         idx = faiss.IndexFlatL2(embeddings.shape[1])
         idx.add(embeddings)
         _faiss_index = idx
@@ -65,8 +64,7 @@ def semantic_search(
     q_vec = _embed_model.encode([query], convert_to_numpy=True).astype('float32')
     distances, indices = index.search(q_vec, top_k)
     return [
-        (courses[idx], float(1.0 / (1.0 + dist)))
-        for dist, idx in zip(distances[0], indices[0])
+        (courses[idx], float(1.0 / (1.0 + dist))) for dist, idx in zip(distances[0], indices[0])
     ]
 
 

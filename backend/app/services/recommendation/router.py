@@ -1,10 +1,11 @@
 """FastAPI router for System 3 — Recommendation Engine."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter
 
-from backend.app.shared.schemas import RecommendationInput, RecommendationOutput
 from backend.app.services.recommendation.logic import recommend
+from backend.app.shared.schemas import RecommendationInput, RecommendationOutput
 
 router = APIRouter(prefix='/recommend', tags=['recommendation'])
 
