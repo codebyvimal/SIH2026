@@ -48,3 +48,47 @@ async def test_post_profile_endpoint(tmp_path, monkeypatch):
     assert profile_out.initial_levels[Domain.DIGITAL_TOOLS] == SkillLevel.PROFICIENT
     assert profile_out.initial_levels[Domain.DATA_MANAGEMENT] == SkillLevel.WORKING
     assert profile_out.initial_levels[Domain.DOMAIN_KNOWLEDGE] == SkillLevel.WORKING
+
+
+@pytest.mark.asyncio
+async def test_get_profile_endpoints(tmp_path, monkeypatch):
+    test_db = str(tmp_path / 'test.db')
+    test_graph = str(tmp_path / 'test_graph.gpickle')
+
+    from backend.app.services.profile import logic
+
+    monkeypatch.setattr(logic, 'DEFAULT_DB_PATH', test_db)
+    monkeypatch.setattr(logic, 'DEFAULT_GRAPH_PATH', test_graph)
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url='http://test') as ac:
+        # Create a profile
+        payload = {
+            'role': 'Director',
+            'dept': 'Planning',
+            'education': 'Ph.D. Economics',
+            'experience_years': 8,
+            'past_trainings': [],
+        }
+        res_post = await ac.post('/profile', json=payload)
+        assert res_post.status_code == 200
+        official_id = res_post.json()['official_id']
+
+        # Fetch profile
+        res_get = await ac.get(f'/profile/{official_id}')
+        assert res_get.status_code == 200
+        data_get = res_get.json()
+        assert data_get['official_id'] == official_id
+        assert data_get['profile_stored'] is True
+        assert data_get['graph_node_added'] is True
+
+        # Fetch non-existent profile
+        res_404 = await ac.get('/profile/non-existent-official-999')
+        assert res_404.status_code == 404
+
+        # List profiles
+        res_list = await ac.get('/profile')
+        assert res_list.status_code == 200
+        profiles_list = res_list.json()
+        assert len(profiles_list) >= 1
+        assert any(p['official_id'] == official_id for p in profiles_list)
