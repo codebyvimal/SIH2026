@@ -10,6 +10,7 @@ import networkx as nx
 
 from backend.app.shared.schemas import (
     Domain,
+    PastTraining,
     ProfileInput,
     ProfileOutput,
     SkillLevel,
@@ -215,6 +216,102 @@ def build_profile(
         graph_node_added=graph_node_added,
         initial_levels=initial_levels,
     )
+
+
+def get_profile(
+    official_id: str,
+    db_path: str = DEFAULT_DB_PATH,
+    graph_path: str = DEFAULT_GRAPH_PATH,
+) -> ProfileOutput | None:
+    """
+    Retrieves official profile by official_id from SQLite and checks graph node presence.
+    """
+    init_db(db_path)
+    conn = sqlite3.connect(db_path)
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT official_id, role, dept, education, experience_years, past_trainings
+            FROM officials WHERE official_id = ?
+            """,
+            (official_id,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        past_trainings_raw = json.loads(row[5])
+        past_trainings = [PastTraining(**pt) for pt in past_trainings_raw]
+        profile_input = ProfileInput(
+            role=row[1],
+            dept=row[2],
+            education=row[3],
+            experience_years=row[4],
+            past_trainings=past_trainings,
+        )
+        initial_levels = compute_initial_levels(profile_input)
+
+        graph = load_or_create_graph(graph_path)
+        graph_node_added = official_id in graph.nodes
+
+        return ProfileOutput(
+            official_id=official_id,
+            profile_stored=True,
+            graph_node_added=graph_node_added,
+            initial_levels=initial_levels,
+        )
+    except (sqlite3.Error, OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        logger.warning('Failed to retrieve profile %s: %s', official_id, exc)
+        return None
+    finally:
+        try:
+            conn.close()
+        except sqlite3.Error:
+            pass
+
+
+def list_profiles(db_path: str = DEFAULT_DB_PATH) -> list[dict]:
+    """
+    Lists all stored official profiles from the SQLite database.
+    """
+    init_db(db_path)
+    conn = sqlite3.connect(db_path)
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT official_id, role, dept, education, experience_years, past_trainings, created_at
+            FROM officials ORDER BY created_at DESC
+            """
+        )
+        rows = cursor.fetchall()
+        result = []
+        for r in rows:
+            try:
+                past_trainings_data = json.loads(r[5])
+            except (json.JSONDecodeError, TypeError):
+                past_trainings_data = []
+            result.append(
+                {
+                    'official_id': r[0],
+                    'role': r[1],
+                    'dept': r[2],
+                    'education': r[3],
+                    'experience_years': r[4],
+                    'past_trainings': past_trainings_data,
+                    'created_at': r[6],
+                }
+            )
+        return result
+    except (sqlite3.Error, OSError) as exc:
+        logger.warning('Failed to list profiles: %s', exc)
+        return []
+    finally:
+        try:
+            conn.close()
+        except sqlite3.Error:
+            pass
 
 
 if __name__ == '__main__':

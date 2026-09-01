@@ -3,7 +3,12 @@ import sqlite3
 import tempfile
 from datetime import UTC, datetime
 
-from backend.app.services.profile.logic import build_profile, compute_initial_levels
+from backend.app.services.profile.logic import (
+    build_profile,
+    compute_initial_levels,
+    get_profile,
+    list_profiles,
+)
 from backend.app.shared.schemas import (
     Domain,
     PastTraining,
@@ -136,3 +141,32 @@ def test_build_profile_storage_and_graph():
             node_data[Domain.STATISTICAL_METHODS]
             == output.initial_levels[Domain.STATISTICAL_METHODS].value
         )
+
+
+def test_get_profile_and_list_profiles():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = os.path.join(tmpdir, 'test.db')
+        graph_path = os.path.join(tmpdir, 'test_graph.gpickle')
+
+        input_data = ProfileInput(
+            role='Analyst',
+            dept='Statistics',
+            education='B.Sc. Statistics',
+            experience_years=2,
+            past_trainings=[],
+        )
+        created = build_profile(input_data, db_path=db_path, graph_path=graph_path)
+
+        # Query existing profile
+        fetched = get_profile(created.official_id, db_path=db_path, graph_path=graph_path)
+        assert fetched is not None
+        assert fetched.official_id == created.official_id
+        assert fetched.initial_levels == created.initial_levels
+
+        # Query non-existing profile
+        assert get_profile('non-existent-id', db_path=db_path, graph_path=graph_path) is None
+
+        # List profiles
+        profiles = list_profiles(db_path=db_path)
+        assert len(profiles) == 1
+        assert profiles[0]['official_id'] == created.official_id
