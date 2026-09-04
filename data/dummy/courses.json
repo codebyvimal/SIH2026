@@ -10,5 +10,89 @@
     "title": "Applied Statistics",
     "provider": "NSSTA",
     "duration_hours": 20
+  },
+  {
+    "course_id": "course-igot-102",
+    "title": "SQL & Database Management",
+    "provider": "iGOT",
+    "duration_hours": 15
+  },
+  {
+    "course_id": "course-nssta-02",
+    "title": "Public Policy Fundamentals",
+    "provider": "NSSTA",
+    "duration_hours": 25
+  },
+  {
+    "course_id": "course-igot-103",
+    "title": "Statistical Methods for Officers",
+    "provider": "iGOT",
+    "duration_hours": 12
+  },
+  {
+    "course_id": "course-nssta-03",
+    "title": "Excel & Power BI",
+    "provider": "NSSTA",
+    "duration_hours": 18
+  },
+  {
+    "course_id": "course-igot-104",
+    "title": "R Programming",
+    "provider": "iGOT",
+    "duration_hours": 14
+  },
+  {
+    "course_id": "course-nssta-04",
+    "title": "Data Visualization",
+    "provider": "NSSTA",
+    "duration_hours": 10
+  },
+  {
+    "course_id": "course-igot-105",
+    "title": "Census Data Handling",
+    "provider": "iGOT",
+    "duration_hours": 8
+  },
+  {
+    "course_id": "course-nssta-05",
+    "title": "GIS for Governance",
+    "provider": "NSSTA",
+    "duration_hours": 22
+  },
+  {
+    "course_id": "course-igot-106",
+    "title": "Machine Learning Basics",
+    "provider": "iGOT",
+    "duration_hours": 30
+  },
+  {
+    "course_id": "course-nssta-06",
+    "title": "Report Writing & Documentation",
+    "provider": "NSSTA",
+    "duration_hours": 5
+  },
+  {
+    "course_id": "course-igot-107",
+    "title": "DBMS Concepts",
+    "provider": "iGOT",
+    "duration_hours": 12
+  },
+  {
+    "course_id": "course-nssta-07",
+    "title": "Advanced Statistics",
+    "provider": "NSSTA",
+    "duration_hours": 40
+  },
+  {
+    "course_id": "course-igot-108",
+    "title": "Digital Governance Tools",
+    "provider": "iGOT",
+    "duration_hours": 16
+  },
+  {
+    "course_id": "course-nssta-08",
+    "title": "Probability & Inference",
+    "provider": "NSSTA",
+    "duration_hours": 25
   }
 ]

@@ -20,5 +20,5 @@ if str(_PROJECT_ROOT) not in sys.path:
 @pytest.fixture()
 def sample_pdf_bytes() -> bytes:
     """Return the raw bytes of the sample stats PDF fixture."""
-    pdf_path = _PROJECT_ROOT / "data" / "dummy" / "sample_pdfs" / "sample_stats.pdf"
+    pdf_path = _PROJECT_ROOT / 'data' / 'dummy' / 'sample_pdfs' / 'sample_stats.pdf'
     return pdf_path.read_bytes()

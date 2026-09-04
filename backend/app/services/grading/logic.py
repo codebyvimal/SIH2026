@@ -8,20 +8,20 @@ from backend.app.shared.schemas import (
     QuestionFeedback,
 )
 
-QUIZZES_FILE = Path("data/dummy/quizzes.json")
+QUIZZES_FILE = Path('data/dummy/quizzes.json')
 
 
 def _load_quizzes() -> dict[str, AssessmentOutput]:
-    with open(QUIZZES_FILE, "r") as f:
+    with open(QUIZZES_FILE, 'r') as f:
         data = json.load(f)
-    return {quiz["quiz_id"]: AssessmentOutput(**quiz) for quiz in data}
+    return {quiz['quiz_id']: AssessmentOutput(**quiz) for quiz in data}
 
 
 def grade_quiz(input_data: GradingInput) -> GradingOutput:
     quizzes = _load_quizzes()
     quiz = quizzes.get(input_data.quiz_id)
     if not quiz:
-        raise ValueError("Quiz not found")
+        raise ValueError('Quiz not found')
 
     feedback_list = []
     correct_count = 0
@@ -42,9 +42,7 @@ def grade_quiz(input_data: GradingInput) -> GradingOutput:
 
         feedback = QuestionFeedback(
             q=question.q,
-            your_answer=user_answer
-            if user_answer is not None
-            else -1,  # Using -1 if unanswered
+            your_answer=user_answer if user_answer is not None else -1,  # Using -1 if unanswered
             correct=question.correct,
             is_correct=is_correct,
             explanation=question.explanation,
@@ -54,10 +52,8 @@ def grade_quiz(input_data: GradingInput) -> GradingOutput:
     # Check for invalid question indices in the input
     for q_idx in input_data.answers:
         if q_idx < 0 or q_idx >= total_questions:
-            raise KeyError(f"Invalid question index: {q_idx}")
+            raise KeyError(f'Invalid question index: {q_idx}')
 
     score = (correct_count / total_questions) * 100.0
 
-    return GradingOutput(
-        quiz_id=input_data.quiz_id, score=score, feedback=feedback_list
-    )
+    return GradingOutput(quiz_id=input_data.quiz_id, score=score, feedback=feedback_list)

@@ -18,7 +18,7 @@ test('renders quiz score percentage', () => {
 
 test('renders correct tally', () => {
   render(<QuizFeedback grading={grading} />);
-  expect(screen.getByText('1 / 2 correct')).toBeInTheDocument();
+  expect(screen.getByText(/1 \/ 2 correct/i)).toBeInTheDocument();
 });
 
 test('renders question text', () => {

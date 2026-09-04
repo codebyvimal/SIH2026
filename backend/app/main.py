@@ -20,26 +20,26 @@ from backend.app.services.profile.router import router as profile_router
 from backend.app.services.recommendation.router import router as recommendation_router
 
 app = FastAPI(
-    title="SIH 2026 — Career Path & Skill Development Platform",
-    version="0.1.0",
-    description="Hackathon demo — 8 integrated systems for government official skill development.",
+    title='SIH 2026 — Career Path & Skill Development Platform',
+    version='0.1.0',
+    description='Hackathon demo — 8 integrated systems for government official skill development.',
 )
 
 # Allow the Next.js dev server (port 3000) to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=['http://localhost:3000', 'http://127.0.0.1:3000'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 # ------------------------------------------------------------------
 # Mount service routers (add new ones here as systems are built)
 # ------------------------------------------------------------------
 app.include_router(profile_router)
-app.include_router(gap_analysis_router, prefix="/api")
+app.include_router(gap_analysis_router, prefix='/api')
 app.include_router(recommendation_router)
-app.include_router(assessment_router, prefix="/api")
-app.include_router(grading_router, prefix="/api")
+app.include_router(assessment_router, prefix='/api')
+app.include_router(grading_router, prefix='/api')
 app.include_router(igot_router)

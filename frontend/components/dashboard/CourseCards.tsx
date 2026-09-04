@@ -40,9 +40,14 @@ export default function CourseCards({ courses }: CourseCardsProps) {
               {/* Header Row */}
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600">
-                    COURSE
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-bold text-blue-600">
+                      #{i + 1}
+                    </span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                      COURSE
+                    </span>
+                  </div>
                   <h3 className="mt-1 text-lg font-bold text-slate-800">
                     {c.course}
                   </h3>

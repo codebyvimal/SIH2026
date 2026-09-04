@@ -7,7 +7,7 @@ from .logic import grade_quiz
 router = APIRouter()
 
 
-@router.post("/grading", response_model=GradingOutput)
+@router.post('/grading', response_model=GradingOutput)
 def submit_grading(input_data: GradingInput) -> GradingOutput:
     try:
         return grade_quiz(input_data)
