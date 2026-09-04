@@ -38,7 +38,7 @@ def test_assessment_endpoint_returns_valid_schema():
     """POST /assessment with a real PDF must return a valid AssessmentOutput."""
     with (
         patch(
-            'backend.app.services.assessment.router.generate_quiz',
+            'backend.app.services.assessment.router.run_assessment',
             return_value=_mock_quiz_output(),
         ),
         open(SAMPLE_PDF, 'rb') as f,
@@ -61,7 +61,7 @@ def test_assessment_question_structure():
     """Each question must have exactly the fields defined in schemas.md."""
     with (
         patch(
-            'backend.app.services.assessment.router.generate_quiz',
+            'backend.app.services.assessment.router.run_assessment',
             return_value=_mock_quiz_output(),
         ),
         open(SAMPLE_PDF, 'rb') as f,

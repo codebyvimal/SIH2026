@@ -1,6 +1,17 @@
+"""Assessment Engine — logic layer.
+
+Workflow:
+1. ``generate_quiz`` extracts PDF text and calls Gemini via Instructor to produce
+   a structured ``AssessmentOutput`` Pydantic model.
+2. ``run_assessment`` (the public entry point called by the router) wraps
+   ``generate_quiz`` and persists the result into the ``assessments`` SQLite table
+   so grading (System 6) can retrieve it later.
+"""
+
 from __future__ import annotations
 
 import io
+import json
 import os
 import uuid
 
@@ -9,12 +20,40 @@ import instructor
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from pypdf import PdfReader
+from sqlalchemy import String, Text
+from sqlalchemy.orm import Mapped, Session, mapped_column
 
+from backend.app.shared.db import Base, get_engine
 from backend.app.shared.schemas import AssessmentOutput, QuizQuestion
 
 load_dotenv()
 
 _NAMESPACE = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')  # URL namespace
+
+
+# ---------------------------------------------------------------------------
+# ORM model
+# ---------------------------------------------------------------------------
+
+
+class AssessmentORM(Base):
+    """Stores a generated quiz so grading (System 6) can look it up by ``quiz_id``."""
+
+    __tablename__ = 'assessments'
+
+    quiz_id: Mapped[str] = mapped_column(String, primary_key=True)
+    source_filename: Mapped[str] = mapped_column(String, nullable=False)
+    questions_json: Mapped[str] = mapped_column(Text, nullable=False)  # JSON array of QuizQuestion
+
+
+def _ensure_table(engine) -> None:  # type: ignore[type-arg]
+    """Create the ``assessments`` table if it does not already exist."""
+    Base.metadata.create_all(engine, tables=[AssessmentORM.__table__], checkfirst=True)
+
+
+# ---------------------------------------------------------------------------
+# PDF helpers
+# ---------------------------------------------------------------------------
 
 
 def _extract_text(pdf_bytes: bytes) -> str:
@@ -26,6 +65,11 @@ def _extract_text(pdf_bytes: bytes) -> str:
         if text:
             parts.append(text)
     return '\n'.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Quiz generation (pure — no DB side-effects, easy to mock in tests)
+# ---------------------------------------------------------------------------
 
 
 def generate_quiz(pdf_bytes: bytes, filename: str) -> AssessmentOutput:
@@ -64,3 +108,47 @@ def generate_quiz(pdf_bytes: bytes, filename: str) -> AssessmentOutput:
         source_filename=filename,
         questions=result.questions,
     )
+
+
+# ---------------------------------------------------------------------------
+# Public entry point — generates quiz AND persists to SQLite
+# ---------------------------------------------------------------------------
+
+
+def run_assessment(
+    pdf_bytes: bytes,
+    filename: str,
+    db_path: str | None = None,
+) -> AssessmentOutput:
+    """Generate a quiz from *pdf_bytes* and persist it to the ``assessments`` table.
+
+    Args:
+        pdf_bytes: Raw bytes of the uploaded PDF.
+        filename:  Original filename (used for deterministic quiz_id generation).
+        db_path:   Override the SQLite path (for tests that inject an in-memory DB).
+
+    Returns:
+        The freshly generated ``AssessmentOutput``.
+
+    Raises:
+        ValueError: if the PDF contains no extractable text.
+        RuntimeError: if ``GEMINI_API_KEY`` is not set.
+    """
+    quiz: AssessmentOutput = generate_quiz(pdf_bytes, filename)
+
+    engine = get_engine(db_path)
+    _ensure_table(engine)
+
+    questions_json = json.dumps([q.model_dump() for q in quiz.questions])
+
+    with Session(engine) as session:
+        # Use merge so re-uploading the same PDF is idempotent.
+        record = AssessmentORM(
+            quiz_id=quiz.quiz_id,
+            source_filename=quiz.source_filename,
+            questions_json=questions_json,
+        )
+        session.merge(record)
+        session.commit()
+
+    return quiz

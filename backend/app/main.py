@@ -35,11 +35,13 @@ app.add_middleware(
 )
 
 # ------------------------------------------------------------------
-# Mount service routers (add new ones here as systems are built)
+# Mount service routers under standardized /api/v1 prefix
 # ------------------------------------------------------------------
-app.include_router(profile_router)
-app.include_router(gap_analysis_router, prefix='/api')
-app.include_router(recommendation_router)
-app.include_router(assessment_router, prefix='/api')
-app.include_router(grading_router, prefix='/api')
-app.include_router(igot_router)
+API_V1_PREFIX = '/api/v1'
+
+app.include_router(profile_router, prefix=API_V1_PREFIX)
+app.include_router(gap_analysis_router, prefix=API_V1_PREFIX)
+app.include_router(recommendation_router, prefix=API_V1_PREFIX)
+app.include_router(assessment_router, prefix=API_V1_PREFIX)
+app.include_router(grading_router, prefix=API_V1_PREFIX)
+app.include_router(igot_router, prefix=API_V1_PREFIX)

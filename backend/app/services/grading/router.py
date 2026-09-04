@@ -11,7 +11,7 @@ router = APIRouter()
 def submit_grading(input_data: GradingInput) -> GradingOutput:
     try:
         return grade_quiz(input_data)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except HTTPException:
+        raise
     except KeyError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

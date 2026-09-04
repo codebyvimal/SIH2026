@@ -1,10 +1,10 @@
-import { getEmployeeDashboardMock } from '@/lib/mockData';
+import { fetchEmployeeDashboard } from '@/lib/api';
 import GapChart from '@/components/dashboard/GapChart';
 import CourseCards from '@/components/dashboard/CourseCards';
 import QuizFeedback from '@/components/dashboard/QuizFeedback';
 
-export default function EmployeeDashboardPage() {
-  const data = getEmployeeDashboardMock();
+export default async function EmployeeDashboardPage() {
+  const data = await fetchEmployeeDashboard();
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">

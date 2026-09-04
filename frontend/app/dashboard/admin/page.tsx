@@ -1,9 +1,9 @@
-import adminData from '@/mock_data/admin_dashboard.json';
+import { fetchAdminDashboard } from '@/lib/api';
 import AdminDomainChart from '@/components/dashboard/AdminDomainChart';
 import AdminTopCourses from '@/components/dashboard/AdminTopCourses';
 
-export default function AdminDashboardPage() {
-  const data = adminData;
+export default async function AdminDashboardPage() {
+  const data = await fetchAdminDashboard();
 
   const domainLabels: Record<string, string> = {
     digital_tools: 'Digital Tools',

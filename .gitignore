@@ -33,3 +33,6 @@ Thumbs.db
 # They ship in the repo so every clone already has the skills and rules.
 data/dummy/*.db
 data/dummy/*.gpickle
+
+# Scratch runner scripts
+run_*.sh
