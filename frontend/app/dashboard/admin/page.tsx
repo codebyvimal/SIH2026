@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { fetchAdminDashboard } from '@/lib/api';
 import AdminDomainChart from '@/components/dashboard/AdminDomainChart';
 import AdminTopCourses from '@/components/dashboard/AdminTopCourses';
@@ -47,14 +48,22 @@ export default async function AdminDashboardPage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white">ADMIN</span>
-          <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-300 border-2 border-amber-400">
-            <img
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-              alt="Admin"
-              className="h-full w-full object-cover"
-            />
+        <div className="flex items-center gap-4">
+          <Link
+            href="/dashboard/employee"
+            className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition flex items-center gap-1 border border-white/20"
+          >
+            &larr; Switch to Employee
+          </Link>
+          <div className="flex items-center gap-3">
+            <span className="rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white">ADMIN</span>
+            <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-300 border-2 border-amber-400">
+              <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
+                alt="Admin"
+                className="h-full w-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </nav>

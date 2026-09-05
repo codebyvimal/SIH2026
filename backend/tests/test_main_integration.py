@@ -19,3 +19,16 @@ async def test_main_mounts_profile_and_gap_analysis_routes() -> None:
         assert response.status_code == 200
         igot_res = await client.get('/api/v1/igot/courses')
         assert igot_res.status_code == 200
+
+        admin_res = await client.get('/api/v1/admin/dashboard')
+        assert admin_res.status_code == 200
+        admin_data = admin_res.json()
+        assert 'total_officials' in admin_data
+        assert 'domain_aggregates' in admin_data
+
+        emp_res = await client.get('/api/v1/dashboard/employee')
+        assert emp_res.status_code == 200
+        emp_data = emp_res.json()
+        assert 'official_id' in emp_data
+        assert 'gaps' in emp_data
+        assert 'recommended' in emp_data

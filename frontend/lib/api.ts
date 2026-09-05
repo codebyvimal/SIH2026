@@ -26,16 +26,17 @@ function readMock<T>(filename: string): T {
 // ─── employee ─────────────────────────────────────────────────────────────────
 
 /**
- * Fetches the employee dashboard payload from `/api/v1/profiles`.
+ * Fetches the employee dashboard payload from `/api/v1/dashboard/employee/{official_id}`.
  *
  * Falls back to `mock_data/employee_dashboard.json` if:
  *  - the network is unreachable
  *  - the backend returns a non-2xx status code
  *  - JSON parsing of the response fails
  */
-export async function fetchEmployeeDashboard(): Promise<EmployeeDashboard> {
+export async function fetchEmployeeDashboard(officialId?: string): Promise<EmployeeDashboard> {
   try {
-    const res = await fetch(`${API_BASE}/profiles`, {
+    const url = officialId ? `${API_BASE}/dashboard/employee/${officialId}` : `${API_BASE}/dashboard/employee`;
+    const res = await fetch(url, {
       // Next.js 14 Server Component: opt-out of the data cache so we always
       // get the latest data; change to { next: { revalidate: 60 } } if you
       // want ISR-style caching.
@@ -44,7 +45,7 @@ export async function fetchEmployeeDashboard(): Promise<EmployeeDashboard> {
 
     if (!res.ok) {
       throw new Error(
-        `Backend returned ${res.status} ${res.statusText} for GET /profiles`,
+        `Backend returned ${res.status} ${res.statusText} for GET ${url}`,
       );
     }
 
@@ -58,6 +59,25 @@ export async function fetchEmployeeDashboard(): Promise<EmployeeDashboard> {
     return readMock<EmployeeDashboard>('employee_dashboard.json');
   }
 }
+
+export interface OfficialSummary {
+  official_id: string;
+  role: string;
+  dept: string;
+  experience_years: number;
+  education: string;
+}
+
+export async function fetchOfficials(): Promise<OfficialSummary[]> {
+  try {
+    const res = await fetch(`${API_BASE}/officials`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    return (await res.json()) as OfficialSummary[];
+  } catch {
+    return [];
+  }
+}
+
 
 // ─── admin ────────────────────────────────────────────────────────────────────
 
