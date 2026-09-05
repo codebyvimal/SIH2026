@@ -9,10 +9,10 @@
     { "skill": "Data Wrangling with Pandas",  "domain": "data_management",      "required": 3, "current": 1, "gap": 2 }
   ],
   "recommended": [
-    { "course": "Advanced Python Analytics",          "course_id": "course-igot-101", "relevance": 0.95, "why": "Directly addresses your gap in Python for data analysis workflows." },
-    { "course": "Fundamentals of Hypothesis Testing", "course_id": "course-igot-204", "relevance": 0.88, "why": "Covers statistical inference at the depth your role requires." },
-    { "course": "SQL for Government Data Systems",    "course_id": "course-nssta-55", "relevance": 0.81, "why": "Tailored to MoSPI database environments and data querying patterns." },
-    { "course": "R for Statistical Computing",        "course_id": "course-igot-312", "relevance": 0.76, "why": "Fills your R programming gap with practical exercises." }
+    { "course": "Advanced Python Analytics",          "course_id": "course-igot-101", "relevance": 0.95, "why": "Directly addresses your gap in Python for data analysis workflows.", "duration_hours": 15 },
+    { "course": "Fundamentals of Hypothesis Testing", "course_id": "course-igot-204", "relevance": 0.88, "why": "Covers statistical inference at the depth your role requires.", "duration_hours": 12 },
+    { "course": "SQL for Government Data Systems",    "course_id": "course-nssta-55", "relevance": 0.81, "why": "Tailored to MoSPI database environments and data querying patterns.", "duration_hours": 10 },
+    { "course": "R for Statistical Computing",        "course_id": "course-igot-312", "relevance": 0.76, "why": "Fills your R programming gap with practical exercises.", "duration_hours": 8 }
   ],
   "latest_grading": {
     "quiz_id": "quiz-stats-01",

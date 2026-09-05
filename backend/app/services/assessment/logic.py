@@ -15,9 +15,9 @@ import json
 import os
 import uuid
 
-import google.generativeai as genai
 import instructor
 from dotenv import load_dotenv
+from google import genai
 from pydantic import BaseModel
 from pypdf import PdfReader
 from sqlalchemy import String, Text
@@ -29,6 +29,7 @@ from backend.app.shared.schemas import AssessmentOutput, QuizQuestion
 load_dotenv()
 
 _NAMESPACE = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')  # URL namespace
+_GEMINI_MODEL = 'gemini-3.6-flash'
 
 
 # ---------------------------------------------------------------------------
@@ -82,9 +83,8 @@ def generate_quiz(pdf_bytes: bytes, filename: str) -> AssessmentOutput:
     if not api_key:
         raise RuntimeError('GEMINI_API_KEY environment variable not set.')
 
-    genai.configure(api_key=api_key)
-    raw_client = genai.GenerativeModel(model_name='gemini-3.6-flash')
-    client = instructor.from_gemini(raw_client, mode=instructor.Mode.GEMINI_JSON)
+    raw_client = genai.Client(api_key=api_key)
+    client = instructor.from_genai(client=raw_client)
 
     prompt = (
         'You are a quiz generator for government training. '
@@ -99,6 +99,7 @@ def generate_quiz(pdf_bytes: bytes, filename: str) -> AssessmentOutput:
         questions: list[QuizQuestion]
 
     result = client.chat.completions.create(
+        model=_GEMINI_MODEL,
         messages=[{'role': 'user', 'content': prompt}],
         response_model=_QuizPayload,
     )
@@ -152,3 +153,17 @@ def run_assessment(
         session.commit()
 
     return quiz
+
+def get_quiz(quiz_id: str, db_path: str | None = None) -> AssessmentOutput | None:
+    """Retrieve a generated quiz from the database."""
+    engine = get_engine(db_path)
+    _ensure_table(engine)
+    with Session(engine) as session:
+        record = session.get(AssessmentORM, quiz_id)
+        if not record:
+            return None
+        return AssessmentOutput(
+            quiz_id=record.quiz_id,
+            source_filename=record.source_filename,
+            questions=json.loads(record.questions_json)
+        )

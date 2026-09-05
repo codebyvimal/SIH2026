@@ -11,8 +11,8 @@ pydantic>=2.0,<3.0
 networkx>=3.0
 
 # LLM integration (structured output only, via Instructor)
-instructor>=1.0
-google-generativeai>=0.8
+instructor[google-genai]>=1.0
+google-genai>=1.0
 
 # Semantic search (local)
 faiss-cpu>=1.8
@@ -20,7 +20,10 @@ sentence-transformers>=3.0
 
 # PDF parsing
 pypdf>=5.0
-reportlab>=4.0
+
+# Database & Environment
+sqlalchemy>=2.0
+python-dotenv>=1.0
 
 # File upload support (required by FastAPI for UploadFile)
 python-multipart>=0.0.9

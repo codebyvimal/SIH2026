@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { fetchAdminDashboard } from '@/lib/api';
 import AdminDomainChart from '@/components/dashboard/AdminDomainChart';
 import AdminTopCourses from '@/components/dashboard/AdminTopCourses';
+import NavBar from "@/components/NavBar";
+import { API_BASE } from "@/lib/config";
 
 export default async function AdminDashboardPage() {
   const data = await fetchAdminDashboard();
@@ -16,57 +18,15 @@ export default async function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       {/* Top Navigation Bar */}
-      <nav className="flex items-center justify-between bg-[#0B1B3D] px-6 py-3 text-white">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 overflow-hidden rounded-full bg-white p-1">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
-              alt="Emblem"
-              className="h-full w-full object-contain"
-            />
-          </div>
-          <div>
-            <h1 className="text-sm font-bold tracking-wide">National Learning Portal</h1>
-            <p className="text-[10px] text-slate-300">Government of India — Admin View</p>
-          </div>
-        </div>
-
-        <div className="hidden items-center gap-8 md:flex">
-          <button className="flex items-center gap-2 border-b-2 border-white pb-1 text-sm font-semibold text-white">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
-            </svg>
-            Admin Dashboard
-          </button>
-          <button className="flex items-center gap-2 pb-1 text-sm text-slate-300 hover:text-white">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            Officials
-          </button>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Link
-            href="/dashboard/employee"
-            className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition flex items-center gap-1 border border-white/20"
-          >
-            &larr; Switch to Employee
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white">ADMIN</span>
-            <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-300 border-2 border-amber-400">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                alt="Admin"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <NavBar 
+        variant="admin" 
+        navItems={[
+    { label: "Admin Dashboard", href: "/dashboard/admin", active: true },
+    { label: "Officials", href: "/dashboard/admin/officials", active: false }
+  ]} 
+        switchHref="/dashboard/employee"
+        switchLabel="← Switch to Employee"
+      />
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl p-6">
@@ -82,7 +42,6 @@ export default async function AdminDashboardPage() {
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Total Officials</p>
             <p className="mt-2 text-3xl font-bold text-slate-800">{data.total_officials.toLocaleString()}</p>
-            <p className="mt-1 text-xs text-emerald-600 font-medium">▲ 12% this quarter</p>
           </div>
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Domains Tracked</p>

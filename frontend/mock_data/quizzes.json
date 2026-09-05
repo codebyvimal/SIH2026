@@ -1,0 +1,63 @@
+[
+  {
+    "quiz_id": "quiz-stats-01",
+    "source_filename": "sample_stats.pdf",
+    "questions": [
+      {
+        "q": "What is a p-value?",
+        "options": [
+          "Probability of null given data",
+          "Probability of data given null",
+          "A test statistic",
+          "Power of the test"
+        ],
+        "correct": 1,
+        "explanation": "A p-value is the probability of observing data as extreme as yours, assuming the null hypothesis is true."
+      },
+      {
+        "q": "Which of the following is a measure of central tendency?",
+        "options": [
+          "Standard Deviation",
+          "Variance",
+          "Mean",
+          "Interquartile Range"
+        ],
+        "correct": 2,
+        "explanation": "Mean is a measure of central tendency, while the others measure dispersion."
+      },
+      {
+        "q": "What does a correlation coefficient of -1 indicate?",
+        "options": [
+          "No correlation",
+          "Perfect positive correlation",
+          "Perfect negative correlation",
+          "Non-linear correlation"
+        ],
+        "correct": 2,
+        "explanation": "A correlation coefficient of -1 indicates a perfect negative (inverse) correlation."
+      },
+      {
+        "q": "In hypothesis testing, what is a Type I error?",
+        "options": [
+          "Failing to reject a false null hypothesis",
+          "Rejecting a true null hypothesis",
+          "Accepting a true alternative hypothesis",
+          "Rejecting a false alternative hypothesis"
+        ],
+        "correct": 1,
+        "explanation": "A Type I error is a false positive: rejecting the null hypothesis when it is actually true."
+      },
+      {
+        "q": "Which distribution is typically used for modeling the number of discrete events over a fixed period?",
+        "options": [
+          "Normal distribution",
+          "Poisson distribution",
+          "Exponential distribution",
+          "Uniform distribution"
+        ],
+        "correct": 1,
+        "explanation": "The Poisson distribution is used to model count data or the number of events in a fixed interval."
+      }
+    ]
+  }
+]

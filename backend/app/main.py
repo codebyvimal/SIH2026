@@ -28,7 +28,7 @@ app = FastAPI(
 # Allow the Next.js dev server (port 3000) to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000', 'http://127.0.0.1:3000'],
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -55,6 +55,7 @@ from collections import defaultdict
 from fastapi import HTTPException
 
 from backend.app.services.gap_analysis.logic import calculate_gaps
+from backend.app.services.grading.logic import get_latest_grading_for_official
 from backend.app.services.profile.logic import list_profiles
 from backend.app.services.recommendation.logic import COURSES, _get_index, semantic_search
 from backend.app.shared.schemas import (
@@ -63,8 +64,6 @@ from backend.app.shared.schemas import (
     DomainAggregate,
     EmployeeDashboard,
     GapAnalysisInput,
-    GradingOutput,
-    QuestionFeedback,
     RecommendedCourse,
 )
 
@@ -160,6 +159,7 @@ def get_employee_dashboard(official_id: str | None = None) -> EmployeeDashboard:
                             course_id=c.course_id,
                             relevance=round(score, 2),
                             why=f'Directly addresses your skill gap in {g.skill} ({g.domain.value.replace("_", " ").title()}).',
+                            duration_hours=c.duration_hours,
                         )
                     )
         if len(recommended) >= 4:
@@ -173,22 +173,11 @@ def get_employee_dashboard(official_id: str | None = None) -> EmployeeDashboard:
                     course_id=c.course_id,
                     relevance=0.85,
                     why='Core recommended professional development course.',
+                    duration_hours=c.duration_hours,
                 )
             )
 
-    latest_grading = GradingOutput(
-        quiz_id='quiz-stats-01',
-        score=85.0,
-        feedback=[
-            QuestionFeedback(
-                q='What is a p-value?',
-                your_answer=1,
-                correct=1,
-                is_correct=True,
-                explanation='A p-value is the probability of observing data as extreme as yours, assuming the null hypothesis is true.',
-            )
-        ],
-    )
+    latest_grading = get_latest_grading_for_official(oid)
 
     return EmployeeDashboard(
         official_id=oid,

@@ -9,11 +9,12 @@
  * @module lib/api
  */
 
+import { API_BASE } from "./config";
 import fs from 'fs';
 import path from 'path';
 import type { EmployeeDashboard, AdminDashboard } from '@/types/schemas';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8000/api/v1';
+
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -33,7 +34,7 @@ function readMock<T>(filename: string): T {
  *  - the backend returns a non-2xx status code
  *  - JSON parsing of the response fails
  */
-export async function fetchEmployeeDashboard(officialId?: string): Promise<EmployeeDashboard> {
+export async function fetchEmployeeDashboard(officialId?: string): Promise<{ payload: EmployeeDashboard, isLive: boolean }> {
   try {
     const url = officialId ? `${API_BASE}/dashboard/employee/${officialId}` : `${API_BASE}/dashboard/employee`;
     const res = await fetch(url, {
@@ -49,14 +50,14 @@ export async function fetchEmployeeDashboard(officialId?: string): Promise<Emplo
       );
     }
 
-    return (await res.json()) as EmployeeDashboard;
+    return { payload: (await res.json()) as EmployeeDashboard, isLive: true };
   } catch (err) {
     // Log so it's visible in the server terminal during development.
     console.warn(
       '[api] fetchEmployeeDashboard – falling back to mock data.',
       err instanceof Error ? err.message : err,
     );
-    return readMock<EmployeeDashboard>('employee_dashboard.json');
+    return { payload: readMock<EmployeeDashboard>('employee_dashboard.json'), isLive: false };
   }
 }
 
@@ -105,5 +106,29 @@ export async function fetchAdminDashboard(): Promise<AdminDashboard> {
       err instanceof Error ? err.message : err,
     );
     return readMock<AdminDashboard>('admin_dashboard.json');
+  }
+}
+
+// ─── assessment & grading ──────────────────────────────────────────────────────
+
+import type { AssessmentOutput, GradingOutput, GradingInput } from '@/types/schemas';
+
+/**
+ * Fetches a quiz by ID.
+ * Falls back to mock_data/quizzes.json.
+ */
+export async function fetchQuiz(quizId: string): Promise<AssessmentOutput> {
+  try {
+    // There is no explicit GET /assessment/{id} in the backend schema yet,
+    // so we attempt a generic fetch, and fallback to mock data on 404.
+    const res = await fetch(`${API_BASE}/assessment/quiz/${quizId}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('No live quiz endpoint');
+    return (await res.json()) as AssessmentOutput;
+  } catch (err) {
+    console.warn('[api] fetchQuiz – falling back to mock data.');
+    const quizzes = readMock<AssessmentOutput[]>('quizzes.json');
+    const quiz = quizzes.find((q) => q.quiz_id === quizId);
+    if (!quiz) throw new Error(`Quiz ${quizId} not found in mock data.`);
+    return quiz;
   }
 }

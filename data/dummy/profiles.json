@@ -1,21 +1,97 @@
 [
   {
-    "official_id": "123e4567-e89b-12d3-a456-426614174000",
-    "role": "Analyst",
-    "dept": "Statistics",
+    "official_id": "8482a931-e89b-12d3-a456-426614174001",
+    "role": "Statistical Officer",
+    "dept": "MoSPI - Field Operations Division",
     "education": "M.Sc. Statistics",
     "experience_years": 3,
     "past_trainings": [
       {
-        "course_name": "Basic Python",
-        "completed_at": "2026-08-31T19:32:42.754641"
+        "course_name": "Basic Python for Data Analysis",
+        "completed_at": "2026-08-31T19:32:42.000000"
       }
     ],
     "profile_stored": true,
     "graph_node_added": true,
     "initial_levels": {
       "digital_tools": 1,
-      "statistical_methods": 2
+      "statistical_methods": 2,
+      "data_management": 1,
+      "domain_knowledge": 2
+    }
+  },
+  {
+    "official_id": "9b8964cc-5846-4a47-a7a8-410c2f7635e2",
+    "role": "Senior Statistical Officer",
+    "dept": "MoSPI - National Accounts Division",
+    "education": "Ph.D. Economics",
+    "experience_years": 8,
+    "past_trainings": [
+      {
+        "course_name": "Advanced National Accounting",
+        "completed_at": "2025-11-15T10:00:00.000000"
+      }
+    ],
+    "profile_stored": true,
+    "graph_node_added": true,
+    "initial_levels": {
+      "digital_tools": 3,
+      "statistical_methods": 4,
+      "data_management": 3,
+      "domain_knowledge": 4
+    }
+  },
+  {
+    "official_id": "7268bdb6-3cf8-4925-8103-d47ef739be83",
+    "role": "Data Processing Assistant",
+    "dept": "MoSPI - Data Processing Centre",
+    "education": "B.Sc. Computer Science",
+    "experience_years": 2,
+    "past_trainings": [],
+    "profile_stored": true,
+    "graph_node_added": true,
+    "initial_levels": {
+      "digital_tools": 3,
+      "statistical_methods": 1,
+      "data_management": 2,
+      "domain_knowledge": 1
+    }
+  },
+  {
+    "official_id": "a4989366-4beb-415d-bc34-b3f9c8ea8a34",
+    "role": "Director",
+    "dept": "MoSPI - Economic Statistics",
+    "education": "MBA, M.A. Economics",
+    "experience_years": 15,
+    "past_trainings": [
+      {
+        "course_name": "Leadership in Public Service",
+        "completed_at": "2024-05-12T09:00:00.000000"
+      }
+    ],
+    "profile_stored": true,
+    "graph_node_added": true,
+    "initial_levels": {
+      "digital_tools": 2,
+      "statistical_methods": 4,
+      "data_management": 3,
+      "domain_knowledge": 4
+    }
+  },
+  {
+    "official_id": "4494a41c-c265-44ce-8d7e-613b4d38d395",
+    "role": "Junior Statistical Officer",
+    "dept": "MoSPI - Social Statistics",
+    "education": "B.Sc. Statistics",
+    "experience_years": 1,
+    "past_trainings": [],
+    "profile_stored": true,
+    "graph_node_added": true,
+    "initial_levels": {
+      "digital_tools": 2,
+      "statistical_methods": 2,
+      "data_management": 1,
+      "domain_knowledge": 1
     }
   }
 ]

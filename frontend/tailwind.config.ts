@@ -8,7 +8,12 @@ const config: Config = {
     "./types/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'deep-navy': '#1E293B',
+        'saffron': '#E65100',
+      }
+    },
   },
   plugins: [],
 };

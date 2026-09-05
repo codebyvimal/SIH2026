@@ -89,5 +89,76 @@ def test_grade_quiz_not_found(client):
 
 
 def test_grade_quiz_invalid_question_index(client):
+    """Out-of-range index is rejected before any feedback is computed.
+
+    Submitting index 99 (quiz has only 1 question) must:
+    - return HTTP 400
+    - not include any partial feedback in the response body
+    """
     response = client.post('/grading', json={'quiz_id': 'quiz-stats-01', 'answers': {'99': 0}})
     assert response.status_code == 400
+    # No partial feedback should be present — validation fires before the loop.
+    body = response.json()
+    assert 'feedback' not in body or body.get('feedback') in (None, [])
+
+
+# ---------------------------------------------------------------------------
+# Tests for grading persistence and get_latest_grading_for_official
+# ---------------------------------------------------------------------------
+
+
+def test_grade_quiz_persists_result_when_official_id_provided(tmp_path):
+    """Submitting with official_id saves a row that can be retrieved later."""
+    from backend.app.services.grading.logic import (
+        get_latest_grading_for_official,
+        grade_quiz,
+        seed_quiz_to_db,
+    )
+    from backend.app.shared.schemas import GradingInput
+
+    db_file = str(tmp_path / 'test_persist.db')
+    seed_quiz_to_db(FIXTURE_QUIZ, db_path=db_file)
+
+    grade_quiz(
+        GradingInput(quiz_id='quiz-stats-01', answers={0: 1}, official_id='official-001'),
+        db_path=db_file,
+    )
+
+    result = get_latest_grading_for_official('official-001', db_path=db_file)
+    assert result is not None
+    assert result.quiz_id == 'quiz-stats-01'
+    assert result.score == 100.0
+    assert len(result.feedback) == 1
+    assert result.feedback[0].is_correct is True
+
+
+def test_get_latest_grading_returns_none_for_unknown_official(tmp_path):
+    """When an official has no grading history, the function returns None."""
+    from backend.app.services.grading.logic import get_latest_grading_for_official
+
+    db_file = str(tmp_path / 'test_empty.db')
+    result = get_latest_grading_for_official('no-such-official', db_path=db_file)
+    assert result is None
+
+
+def test_grade_quiz_without_official_id_does_not_persist(tmp_path):
+    """Omitting official_id does not write to grading_results."""
+    from backend.app.services.grading.logic import (
+        get_latest_grading_for_official,
+        grade_quiz,
+        seed_quiz_to_db,
+    )
+    from backend.app.shared.schemas import GradingInput
+
+    db_file = str(tmp_path / 'test_no_persist.db')
+    seed_quiz_to_db(FIXTURE_QUIZ, db_path=db_file)
+
+    grade_quiz(
+        GradingInput(quiz_id='quiz-stats-01', answers={0: 1}),  # no official_id
+        db_path=db_file,
+    )
+
+    # Nothing should have been written.
+    result = get_latest_grading_for_official('any-official', db_path=db_file)
+    assert result is None
+

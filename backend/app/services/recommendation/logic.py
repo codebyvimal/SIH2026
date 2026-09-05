@@ -7,9 +7,9 @@ import os
 import pathlib
 
 import faiss
-import google.generativeai as genai
 import instructor
 from dotenv import load_dotenv
+from google import genai
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 
@@ -25,6 +25,7 @@ load_dotenv()
 _COURSES_PATH = pathlib.Path('data/dummy/courses.json')
 _EMBED_MODEL_NAME = 'all-MiniLM-L6-v2'
 _TOP_K = 5
+_GEMINI_MODEL = 'gemini-3.6-flash'
 
 # Module-level singletons — built once at startup
 COURSES: list[IgotCourse] = [IgotCourse(**c) for c in json.loads(_COURSES_PATH.read_text())]
@@ -43,12 +44,8 @@ def _get_genai_client() -> instructor.Instructor:
         api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
             raise RuntimeError('GEMINI_API_KEY environment variable not set.')
-        genai.configure(api_key=api_key)
-        raw_client = genai.GenerativeModel('gemini-3.6-flash')
-        _genai_client = instructor.from_gemini(
-            client=raw_client,
-            mode=instructor.Mode.GEMINI_JSON,
-        )
+        raw_client = genai.Client(api_key=api_key)
+        _genai_client = instructor.from_genai(client=raw_client)
     return _genai_client
 
 
@@ -101,6 +98,7 @@ def llm_rerank(
         f'Return relevance score (0.0–1.0) and a concise "why" for each course.'
     )
     result = client.chat.completions.create(
+        model=_GEMINI_MODEL,
         messages=[{'role': 'user', 'content': prompt}],
         response_model=_LLMReRankOutput,
     )

@@ -71,6 +71,7 @@ export interface RecommendedCourse {
   course_id: string;
   relevance: number;
   why: string;
+  duration_hours: number;
 }
 
 export interface RecommendationOutput {

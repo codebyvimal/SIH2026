@@ -4,16 +4,121 @@
       "skill": "Python for Data Analysis",
       "domain": "digital_tools",
       "required_by_role": {
-        "Data Scientist": 4,
-        "Analyst": 3
+        "Statistical Officer": 3,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 2,
+        "Director": 2,
+        "Junior Statistical Officer": 2
+      }
+    },
+    {
+      "skill": "R Programming",
+      "domain": "digital_tools",
+      "required_by_role": {
+        "Statistical Officer": 4,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 2,
+        "Director": 1,
+        "Junior Statistical Officer": 3
+      }
+    },
+    {
+      "skill": "SQL",
+      "domain": "digital_tools",
+      "required_by_role": {
+        "Statistical Officer": 3,
+        "Senior Statistical Officer": 3,
+        "Data Processing Assistant": 4,
+        "Director": 2,
+        "Junior Statistical Officer": 2
       }
     },
     {
       "skill": "Statistical Inference",
       "domain": "statistical_methods",
       "required_by_role": {
-        "Data Scientist": 4,
-        "Analyst": 2
+        "Statistical Officer": 4,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 1,
+        "Director": 3,
+        "Junior Statistical Officer": 3
+      }
+    },
+    {
+      "skill": "Survey Methodology",
+      "domain": "statistical_methods",
+      "required_by_role": {
+        "Statistical Officer": 4,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 2,
+        "Director": 4,
+        "Junior Statistical Officer": 3
+      }
+    },
+    {
+      "skill": "Predictive Modeling",
+      "domain": "statistical_methods",
+      "required_by_role": {
+        "Statistical Officer": 2,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 1,
+        "Director": 2,
+        "Junior Statistical Officer": 1
+      }
+    },
+    {
+      "skill": "Data Cleaning & Imputation",
+      "domain": "data_management",
+      "required_by_role": {
+        "Statistical Officer": 4,
+        "Senior Statistical Officer": 3,
+        "Data Processing Assistant": 4,
+        "Director": 2,
+        "Junior Statistical Officer": 4
+      }
+    },
+    {
+      "skill": "Database Administration",
+      "domain": "data_management",
+      "required_by_role": {
+        "Statistical Officer": 1,
+        "Senior Statistical Officer": 2,
+        "Data Processing Assistant": 4,
+        "Director": 1,
+        "Junior Statistical Officer": 1
+      }
+    },
+    {
+      "skill": "National Accounts & GDP",
+      "domain": "domain_knowledge",
+      "required_by_role": {
+        "Statistical Officer": 3,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 1,
+        "Director": 4,
+        "Junior Statistical Officer": 2
+      }
+    },
+    {
+      "skill": "Public Policy & Governance",
+      "domain": "domain_knowledge",
+      "required_by_role": {
+        "Statistical Officer": 2,
+        "Senior Statistical Officer": 3,
+        "Data Processing Assistant": 1,
+        "Director": 4,
+        "Junior Statistical Officer": 1
+      }
+    },
+    {
+      "skill": "Economic Indicators",
+      "domain": "domain_knowledge",
+      "required_by_role": {
+        "Statistical Officer": 4,
+        "Senior Statistical Officer": 4,
+        "Data Processing Assistant": 2,
+        "Director": 4,
+        "Junior Statistical Officer": 3
       }
     }
   ]

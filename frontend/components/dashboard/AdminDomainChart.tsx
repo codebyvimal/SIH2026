@@ -22,7 +22,6 @@ interface AdminDomainChartProps {
   domainLabels: Record<string, string>;
 }
 
-const GAP_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e'];
 
 export default function AdminDomainChart({ aggregates, domainLabels }: AdminDomainChartProps) {
   const data = aggregates.map((d) => ({
@@ -52,13 +51,19 @@ export default function AdminDomainChart({ aggregates, domainLabels }: AdminDoma
           formatter={(value: number) => [`${value.toFixed(2)}`, 'Avg Gap']}
         />
         <Bar dataKey="avg_gap" radius={[6, 6, 0, 0]} maxBarSize={56}>
-          {data.map((_, i) => (
-            <Cell
-              key={i}
-              fill={GAP_COLORS[i % GAP_COLORS.length]}
-              fillOpacity={0.85}
-            />
-          ))}
+          {data.map((entry, i) => {
+            let color = '#22c55e'; // Green for < 1.0
+            if (entry.avg_gap > 2.0) color = '#ef4444'; // Red for > 2.0
+            else if (entry.avg_gap >= 1.0) color = '#eab308'; // Yellow for 1.0 - 2.0
+
+            return (
+              <Cell
+                key={i}
+                fill={color}
+                fillOpacity={0.85}
+              />
+            );
+          })}
         </Bar>
       </BarChart>
     </ResponsiveContainer>

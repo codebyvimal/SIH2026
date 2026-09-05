@@ -83,6 +83,7 @@ class RecommendedCourse(BaseModel):
     course_id: str
     relevance: float = Field(ge=0.0, le=1.0)  # FAISS similarity, then LLM-adjusted
     why: str  # short LLM-generated justification
+    duration_hours: int
 
 
 class RecommendationOutput(BaseModel):
@@ -128,6 +129,7 @@ class AssessmentOutput(BaseModel):
 class GradingInput(BaseModel):
     quiz_id: str
     answers: dict[int, int]  # question index -> chosen option index
+    official_id: str | None = None  # optional; when provided the result is persisted to grading_results
 
 
 class QuestionFeedback(BaseModel):

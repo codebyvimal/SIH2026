@@ -44,6 +44,48 @@ class OfficialORM(Base):
 
 
 # ---------------------------------------------------------------------------
+# Domain keyword mapping — mirrors profile service rules (local copy, isolation rule)
+# ---------------------------------------------------------------------------
+
+_DOMAIN_KEYWORDS: dict[Domain, list[str]] = {
+    Domain.STATISTICAL_METHODS: [
+        'statistic',
+        'inference',
+        'probability',
+        'econometric',
+        'mathematics',
+        'math ',
+    ],
+    Domain.DATA_MANAGEMENT: [
+        'sql',
+        'database',
+        'data management',
+        'etl',
+        'warehouse',
+        'data governance',
+    ],
+    Domain.DOMAIN_KNOWLEDGE: [
+        'public policy',
+        'governance',
+        'public administration',
+        'economics',
+        'domain knowledge',
+    ],
+    Domain.DIGITAL_TOOLS: [
+        'python',
+        'excel',
+        ' r ',
+        'r programming',
+        'tableau',
+        'power bi',
+        'software',
+        'programming',
+        'digital tool',
+    ],
+}
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -55,11 +97,38 @@ def _get_data_dir() -> Path:
 def _compute_initial_levels(profile_input: ProfileInput) -> dict[Domain, SkillLevel]:
     """Re-derive initial skill levels using the same rules as System 1.
 
-    Kept local to avoid importing from the profile service (isolation rule).
-    """
-    from backend.app.services.profile.logic import compute_initial_levels
+    Logic is inlined here to satisfy the isolation rule (no cross-service imports).
 
-    return compute_initial_levels(profile_input)
+    Rules:
+    1. Base level from experience_years:
+       - ≤2 years  → BASIC (1)
+       - ≤5 years  → WORKING (2)
+       - >5 years  → PROFICIENT (3)
+    2. +1 bump (capped at EXPERT=4) if domain keywords appear in education or
+       past_trainings course names.
+    """
+    # 1. Base level from experience
+    if profile_input.experience_years <= 2:
+        base_level_val = SkillLevel.BASIC.value
+    elif profile_input.experience_years <= 5:
+        base_level_val = SkillLevel.WORKING.value
+    else:
+        base_level_val = SkillLevel.PROFICIENT.value
+
+    # Aggregate text for keyword checking
+    search_text = (profile_input.education or '').lower() + ' '
+    for pt in profile_input.past_trainings:
+        search_text += (pt.course_name or '').lower() + ' '
+
+    initial_levels: dict[Domain, SkillLevel] = {}
+    for domain in Domain:
+        level_val = base_level_val
+        keywords = _DOMAIN_KEYWORDS.get(domain, [])
+        if any(keyword in search_text for keyword in keywords):
+            level_val = min(level_val + 1, SkillLevel.EXPERT.value)
+        initial_levels[domain] = SkillLevel(level_val)
+
+    return initial_levels
 
 
 # ---------------------------------------------------------------------------

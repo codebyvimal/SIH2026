@@ -4,10 +4,9 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from backend.app.shared.schemas import AssessmentOutput
 
-from .logic import run_assessment
+from .logic import run_assessment, get_quiz
 
 router = APIRouter()
-
 
 from starlette.concurrency import run_in_threadpool
 
@@ -21,3 +20,11 @@ async def assessment_endpoint(file: UploadFile = File(...)) -> AssessmentOutput:
         return await run_in_threadpool(run_assessment, pdf_bytes, file.filename or 'unknown.pdf')
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.get('/assessment/quiz/{quiz_id}', response_model=AssessmentOutput)
+def get_quiz_endpoint(quiz_id: str) -> AssessmentOutput:
+    quiz = get_quiz(quiz_id)
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+    return quiz
