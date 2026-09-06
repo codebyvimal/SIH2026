@@ -22,10 +22,10 @@ from backend.app.shared.schemas import (
 
 load_dotenv()
 
-_COURSES_PATH = pathlib.Path('data/dummy/courses.json')
+_COURSES_PATH = pathlib.Path(__file__).resolve().parents[4] / 'data' / 'dummy' / 'courses.json'
 _EMBED_MODEL_NAME = 'all-MiniLM-L6-v2'
 _TOP_K = 5
-_GEMINI_MODEL = 'gemini-3.6-flash'
+_GEMINI_MODEL = 'gemini-1.5-flash'
 
 # Module-level singletons — built once at startup
 COURSES: list[IgotCourse] = [IgotCourse(**c) for c in json.loads(_COURSES_PATH.read_text())]

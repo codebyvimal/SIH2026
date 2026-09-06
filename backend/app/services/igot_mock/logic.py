@@ -40,9 +40,10 @@ def enroll(request: EnrollRequest) -> EnrollResponse:
 
 def get_completion(enrollment_id: str) -> CompletionStatus:
     """Return canned completion status; always incomplete in demo."""
-    if enrollment_id not in _enrollments:
-        raise KeyError(f"enrollment_id '{enrollment_id}' not found")
-    entry = _enrollments[enrollment_id]
+    entry = _enrollments.get(enrollment_id, {
+        'completed': False,
+        'completed_at': None,
+    })
     return CompletionStatus(
         enrollment_id=enrollment_id,
         completed=entry['completed'],

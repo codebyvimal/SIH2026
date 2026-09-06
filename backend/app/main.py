@@ -12,6 +12,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()  # loads .env at startup so GEMINI_API_KEY is available everywhere
 
+import os
+import logging
+import warnings
+
+if not os.getenv("GEMINI_API_KEY"):
+    warnings.warn("GEMINI_API_KEY is not set in the environment. Generative AI features will fail.", RuntimeWarning)
+    logging.warning("GEMINI_API_KEY is not set in the environment. Generative AI features will fail.")
+
 from backend.app.services.assessment.router import router as assessment_router
 from backend.app.services.gap_analysis.router import router as gap_analysis_router
 from backend.app.services.grading.router import router as grading_router
@@ -69,7 +77,6 @@ from backend.app.shared.schemas import (
 
 
 @app.get(f'{API_V1_PREFIX}/admin/dashboard', response_model=AdminDashboard)
-@app.get(f'{API_V1_PREFIX}/dashboard/admin', response_model=AdminDashboard)
 def get_admin_dashboard() -> AdminDashboard:
     """Calculates live aggregated competency metrics across all officials in SQLite."""
     profiles = list_profiles()
@@ -120,7 +127,6 @@ def get_admin_dashboard() -> AdminDashboard:
 
 @app.get(f'{API_V1_PREFIX}/dashboard/employee/{{official_id}}', response_model=EmployeeDashboard)
 @app.get(f'{API_V1_PREFIX}/dashboard/employee', response_model=EmployeeDashboard)
-@app.get(f'{API_V1_PREFIX}/profiles', response_model=EmployeeDashboard)
 def get_employee_dashboard(official_id: str | None = None) -> EmployeeDashboard:
     """Dynamically integrates System 1, 2, 3, and 6 for a specific official."""
     profiles = list_profiles()

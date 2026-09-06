@@ -10,15 +10,7 @@ export default async function AdminOfficialsPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       {/* Top Navigation Bar */}
-      <NavBar 
-        variant="admin" 
-        navItems={[
-    { label: "Admin Dashboard", href: "/dashboard/admin", active: false },
-    { label: "Officials", href: "/dashboard/admin/officials", active: true }
-  ]} 
-        switchHref="/dashboard/employee"
-        switchLabel="← Switch to Employee"
-      />
+      <NavBar />
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl p-6">

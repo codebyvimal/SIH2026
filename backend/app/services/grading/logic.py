@@ -229,3 +229,32 @@ def get_latest_grading_for_official(
 
     feedback = [QuestionFeedback(**fb) for fb in json.loads(row.feedback_json)]
     return GradingOutput(quiz_id=row.quiz_id, score=row.score, feedback=feedback)
+
+
+def get_grading_by_quiz_and_official(
+    quiz_id: str, official_id: str, db_path: str | None = None
+) -> GradingOutput | None:
+    """Return the most recent grading result for a given quiz and official.
+
+    Args:
+        quiz_id: The ID of the quiz.
+        official_id: The official whose grading result is requested.
+        db_path: Override the SQLite path (for tests).
+    """
+    engine = get_engine(db_path)
+    _ensure_tables(engine)
+
+    with Session(engine) as session:
+        row: GradingResultORM | None = (
+            session.query(GradingResultORM)
+            .filter(GradingResultORM.quiz_id == quiz_id)
+            .filter(GradingResultORM.official_id == official_id)
+            .order_by(GradingResultORM.created_at.desc())
+            .first()
+        )
+
+    if row is None:
+        return None
+
+    feedback = [QuestionFeedback(**fb) for fb in json.loads(row.feedback_json)]
+    return GradingOutput(quiz_id=row.quiz_id, score=row.score, feedback=feedback)

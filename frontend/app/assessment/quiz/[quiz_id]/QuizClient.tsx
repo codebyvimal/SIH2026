@@ -7,13 +7,15 @@ import type { AssessmentOutput, GradingOutput } from '@/types/schemas';
 
 interface QuizClientProps {
   quiz: AssessmentOutput;
+  officialId?: string | null;
 }
 
-export default function QuizClient({ quiz }: QuizClientProps) {
+export default function QuizClient({ quiz, officialId }: QuizClientProps) {
   const router = useRouter();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const totalQuestions = quiz.questions.length;
   const question = quiz.questions[currentIdx];
@@ -36,8 +38,8 @@ export default function QuizClient({ quiz }: QuizClientProps) {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setErrorMsg(null);
     try {
-      
       let result: GradingOutput;
       
       try {
@@ -47,6 +49,7 @@ export default function QuizClient({ quiz }: QuizClientProps) {
           body: JSON.stringify({
             quiz_id: quiz.quiz_id,
             answers,
+            official_id: officialId,
           }),
         });
 
@@ -56,7 +59,6 @@ export default function QuizClient({ quiz }: QuizClientProps) {
         result = await res.json();
       } catch (err) {
         console.warn('[QuizClient] fetch grading failed, using mock grading', err);
-        // Fallback mock grading
         let correctCount = 0;
         const feedback = quiz.questions.map((q, i) => {
           const is_correct = answers[i] === q.correct;
@@ -77,13 +79,13 @@ export default function QuizClient({ quiz }: QuizClientProps) {
         };
       }
       
-      // Store result in sessionStorage so the results page can retrieve it instantly
       sessionStorage.setItem(`gradingResult_${quiz.quiz_id}`, JSON.stringify(result));
       
-      router.push(`/assessment/results/${quiz.quiz_id}`);
+      const queryParams = officialId ? `?official_id=${officialId}` : '';
+      router.push(`/assessment/results/${quiz.quiz_id}${queryParams}`);
     } catch (err) {
       console.error(err);
-      alert('Error submitting quiz. Please try again.');
+      setErrorMsg('Error submitting quiz. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -93,73 +95,79 @@ export default function QuizClient({ quiz }: QuizClientProps) {
   const unansweredCount = totalQuestions - Object.keys(answers).length;
 
   return (
-    <div className="min-h-screen bg-deep-navy flex flex-col items-center justify-center p-4 font-sans relative overflow-hidden text-slate-100">
-      
-      {/* Background Decorative Elements */}
-      <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[150px] pointer-events-none" />
-
-      <div className="w-full max-w-2xl relative z-10">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen bg-gov-bg flex flex-col font-montserrat text-gray-800">
+      <div className="bg-gov-blue text-white shadow-md">
+        <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Skill Assessment</h1>
-            <p className="text-sm text-slate-400 mt-1 font-mono">Source: {quiz.source_filename}</p>
+            <h1 className="text-2xl font-bold tracking-tight">Skill Assessment</h1>
+            <p className="text-sm text-blue-200 mt-1">Source: {quiz.source_filename}</p>
           </div>
           <div className="flex flex-col items-end">
-            <div className="text-sm font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+            <div className="text-sm font-semibold bg-white/20 px-4 py-1.5 rounded-full border border-white/30 backdrop-blur-sm">
               Question {currentIdx + 1} of {totalQuestions}
             </div>
             {unansweredCount > 0 ? (
-              <p className="text-[10px] text-slate-400 mt-2 tracking-wide uppercase">
+              <p className="text-xs text-blue-200 mt-2 tracking-wide uppercase font-medium">
                 {unansweredCount} remaining
               </p>
             ) : (
-              <p className="text-[10px] text-emerald-400 mt-2 tracking-wide uppercase">
+              <p className="text-xs text-green-300 mt-2 tracking-wide uppercase font-bold flex items-center gap-1">
+                <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
                 All Answered
               </p>
             )}
           </div>
         </div>
-
-        {/* Progress Bar */}
-        <div className="w-full h-1.5 bg-slate-800 rounded-full mb-10 overflow-hidden">
+        
+        {/* Progress Bar in Header */}
+        <div className="w-full h-1.5 bg-gov-blue-dark">
           <div 
-            className="h-full bg-gradient-to-r from-blue-500 to-emerald-400 transition-all duration-500 ease-out rounded-full"
+            className="h-full bg-gov-gold transition-all duration-500 ease-out"
             style={{ width: `${((currentIdx + 1) / totalQuestions) * 100}%` }}
           />
         </div>
+      </div>
 
-        {/* Question Card */}
-        <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-8 shadow-2xl shadow-black/50 mb-8 min-h-[300px] flex flex-col justify-center">
-          <h2 className="text-xl md:text-2xl font-medium text-slate-100 mb-8 leading-snug">
+      <div className="flex-1 max-w-4xl w-full mx-auto p-4 md:p-8 flex flex-col">
+        {errorMsg && (
+          <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm flex items-center justify-between shadow-sm">
+            <span>{errorMsg}</span>
+            <button onClick={() => setErrorMsg(null)} className="text-red-400 hover:text-red-600 text-lg font-bold">
+              &times;
+            </button>
+          </div>
+        )}
+
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10 mb-8 flex flex-col justify-center min-h-[350px]">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-8 leading-relaxed">
             {question.q}
           </h2>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {question.options.map((opt, idx) => {
               const isSelected = answers[currentIdx] === idx;
               return (
                 <button
                   key={idx}
                   onClick={() => handleSelect(idx)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all duration-200 group flex items-center gap-4
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 group flex items-center gap-4
                     ${isSelected 
-                      ? 'bg-blue-600/20 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.15)]' 
-                      : 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-slate-500'
+                      ? 'bg-blue-50 border-gov-blue shadow-sm' 
+                      : 'bg-white border-gray-200 hover:border-gov-blue/50 hover:bg-gray-50'
                     }
                   `}
                 >
-                  <div className={`flex items-center justify-center w-6 h-6 rounded-full border text-xs font-bold transition-colors
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold transition-colors shadow-sm
                     ${isSelected 
-                      ? 'bg-blue-500 border-blue-500 text-white' 
-                      : 'bg-slate-900 border-slate-600 text-slate-400 group-hover:border-slate-400 group-hover:text-slate-300'
+                      ? 'bg-gov-blue text-white' 
+                      : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-hover:text-gray-700'
                     }`}
                   >
                     {String.fromCharCode(65 + idx)}
                   </div>
-                  <span className={`flex-1 text-[15px] ${isSelected ? 'text-blue-100 font-medium' : 'text-slate-300'}`}>
+                  <span className={`flex-1 text-base ${isSelected ? 'text-gov-blue font-semibold' : 'text-gray-700'}`}>
                     {opt}
                   </span>
                 </button>
@@ -168,12 +176,11 @@ export default function QuizClient({ quiz }: QuizClientProps) {
           </div>
         </div>
 
-        {/* Navigation / Actions */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           <button
             onClick={handlePrevious}
             disabled={currentIdx === 0 || isSubmitting}
-            className="px-6 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-slate-800/80 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="px-6 py-3 rounded-xl font-semibold text-sm border-2 border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             &larr; Previous
           </button>
@@ -182,7 +189,7 @@ export default function QuizClient({ quiz }: QuizClientProps) {
             <button
               onClick={handleNext}
               disabled={!isCurrentAnswered}
-              className="px-8 py-3 rounded-xl font-semibold text-sm bg-white text-slate-900 hover:bg-slate-200 shadow-lg shadow-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+              className="px-8 py-3 rounded-xl font-bold text-sm bg-gov-blue text-white hover:bg-gov-blue-dark shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
             >
               Next &rarr;
             </button>
@@ -190,7 +197,7 @@ export default function QuizClient({ quiz }: QuizClientProps) {
             <button
               onClick={handleSubmit}
               disabled={!isAllAnswered || isSubmitting}
-              className="px-8 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/20 disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-110 transition-all flex items-center gap-2"
+              className="px-8 py-3 rounded-xl font-bold text-sm bg-gov-green text-white shadow-md disabled:opacity-40 disabled:cursor-not-allowed hover:bg-green-700 transition-all flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>
@@ -203,7 +210,6 @@ export default function QuizClient({ quiz }: QuizClientProps) {
             </button>
           )}
         </div>
-
       </div>
     </div>
   );

@@ -5,58 +5,38 @@ interface QuizFeedbackProps {
 }
 
 export default function QuizFeedback({ grading }: QuizFeedbackProps) {
-  const correct = grading.feedback.filter((f) => f.is_correct).length;
-  const total = grading.feedback.length;
-  const scoreColor =
-    grading.score >= 80 ? 'text-emerald-500'
-    : grading.score >= 50 ? 'text-amber-500'
-    : 'text-rose-500';
-  const circumference = 2 * Math.PI * 32; // r=32
-
   return (
-    <div className="space-y-6">
-      {/* Score ring */}
-      <div className="flex items-center gap-6 border-b border-slate-100 pb-5">
-        <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
-          <svg viewBox="0 0 80 80" className="absolute inset-0 -rotate-90" width="80" height="80">
-            <circle cx="40" cy="40" r="32" fill="none" stroke="#f1f5f9" strokeWidth="8" />
-            <circle
-              cx="40" cy="40" r="32" fill="none"
-              stroke="currentColor"
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeDasharray={`${(grading.score / 100) * circumference} ${circumference}`}
-              className={scoreColor}
-            />
-          </svg>
-          <span className={`text-lg font-bold tabular-nums ${scoreColor}`}>
-            {grading.score.toFixed(0)}%
-          </span>
-        </div>
-        <div>
-          <p className="text-sm font-bold text-slate-800">{correct} / {total} Correct</p>
-          <p className="mt-0.5 text-xs font-medium text-slate-500">Quiz ID: {grading.quiz_id}</p>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       {/* Per-question feedback */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {grading.feedback.map((item, i) => (
           <div
             key={i}
-            className={`rounded-xl border p-4 text-sm ${
+            className={`rounded-xl border p-5 ${
               item.is_correct
-                ? 'border-emerald-100 bg-emerald-50/50'
-                : 'border-rose-100 bg-rose-50/50'
+                ? 'bg-green-50 border-green-200'
+                : 'bg-red-50 border-red-200'
             }`}
           >
-            <div className="mb-1 flex items-start gap-2">
-              <span className={`mt-0.5 text-base leading-none font-bold ${item.is_correct ? 'text-emerald-500' : 'text-rose-500'}`}>
-                {item.is_correct ? '\u2713' : '\u2717'}
+            <div className="mb-2 flex items-start gap-3">
+              <span className={`mt-0.5 shrink-0 flex items-center justify-center w-6 h-6 rounded-full text-white ${item.is_correct ? 'bg-gov-green' : 'bg-gov-red'}`}>
+                {item.is_correct ? (
+                  <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                )}
               </span>
-              <p className="font-semibold text-slate-800 leading-snug">{item.q}</p>
+              <p className="font-semibold text-gray-800 leading-snug">{item.q}</p>
             </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-600">{item.explanation}</p>
+            
+            <div className="bg-blue-50 border-l-4 border-gov-blue rounded-r-xl p-3 mt-3 text-sm text-blue-800 ml-9">
+              <span className="font-bold text-gov-blue mr-2">Explanation:</span>
+              {item.explanation}
+            </div>
           </div>
         ))}
       </div>

@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* iGOT-matching font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Gov website accessibility */
+:focus-visible {
+  outline: 3px solid #264092;
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar (iGOT style) */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F4F6F9; }
+::-webkit-scrollbar-thumb { background: #264092; border-radius: 3px; }
+
+/* Move the @keyframes progress here */
+@keyframes progress {
+  0% { left: -50%; }
+  100% { left: 100%; }
+}
+
+/* Ensure Montserrat is applied */
+body {
+  font-family: 'Montserrat', sans-serif;
+}

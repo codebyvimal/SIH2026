@@ -29,7 +29,7 @@ from backend.app.shared.schemas import AssessmentOutput, QuizQuestion
 load_dotenv()
 
 _NAMESPACE = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')  # URL namespace
-_GEMINI_MODEL = 'gemini-3.6-flash'
+_GEMINI_MODEL = 'gemini-1.5-flash'
 
 
 # ---------------------------------------------------------------------------
@@ -104,8 +104,10 @@ def generate_quiz(pdf_bytes: bytes, filename: str) -> AssessmentOutput:
         response_model=_QuizPayload,
     )
 
+    import hashlib
+    content_hash = hashlib.md5(text[:1000].encode('utf-8', errors='ignore')).hexdigest()
     return AssessmentOutput(
-        quiz_id=str(uuid.uuid5(_NAMESPACE, filename)),
+        quiz_id=str(uuid.uuid5(_NAMESPACE, f"{filename}_{content_hash}")),
         source_filename=filename,
         questions=result.questions,
     )
