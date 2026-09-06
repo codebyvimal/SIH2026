@@ -28,10 +28,13 @@ export default function NavBar() {
             </div>
             <div className="hidden sm:flex flex-col justify-center">
               <span className="text-[10px] sm:text-xs font-medium text-gray-300 leading-tight">Government of India</span>
-              <span className="text-[10px] sm:text-xs font-medium text-gray-300 leading-tight">Ministry of Statistics & Programme Implementation</span>
+              <span className="text-[10px] sm:text-xs font-medium text-gray-300 leading-tight">MoSPI</span>
             </div>
             <div className="h-8 w-px bg-white/30 hidden md:block mx-1 md:mx-2"></div>
-            <span className="font-bold text-sm md:text-lg">National Learning Portal</span>
+            <div className="flex flex-col justify-center">
+              <span className="font-bold text-sm md:text-lg leading-tight whitespace-nowrap">National Learning Portal</span>
+              <span className="text-[10px] text-gray-300 leading-tight hidden md:block">Ministry of Statistics & Programme Implementation</span>
+            </div>
           </Link>
 
           {/* Right side */}

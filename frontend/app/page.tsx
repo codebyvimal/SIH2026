@@ -25,25 +25,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-transparent text-slate-800 flex flex-col font-sans relative overflow-x-hidden">
       
-      {/* Background Ashoka Chakra Watermark */}
-      <div className="absolute top-0 right-0 opacity-[0.03] pointer-events-none z-0 transform translate-x-1/3 -translate-y-1/4">
-        <svg viewBox="0 0 100 100" className="w-[1000px] h-[1000px] text-blue-900" fill="none" stroke="currentColor">
-          <circle cx="50" cy="50" r="45" strokeWidth="2"/>
-          <circle cx="50" cy="50" r="7" fill="currentColor"/>
-          {[...Array(24)].map((_, i) => (
-            <g key={i} transform={`rotate(${i * 15} 50 50)`}>
-              <line x1="50" y1="50" x2="50" y2="5" strokeWidth="1"/>
-              <circle cx="50" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
-            </g>
-          ))}
-        </svg>
-      </div>
+      
 
       <NavBar />
       
       <main className="flex-1 flex flex-col relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <div className="flex flex-col lg:flex-row items-center gap-12 mb-20">
+        <div className="flex flex-col lg:flex-row items-center gap-6 mb-12">
           
           {/* Left Side */}
           <div className="flex-1 space-y-6">
@@ -58,15 +46,15 @@ export default function HomePage() {
             </p>
             
             <div className="flex flex-wrap gap-4 pt-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#102868] bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
+              <div className="flex items-center gap-2 text-sm font-medium text-[#102868] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                 <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"/></svg>
                 Better Data / Better Decisions
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-[#102868] bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
+              <div className="flex items-center gap-2 text-sm font-medium text-[#102868] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                 <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
                 Skilled Workforce / Stronger India
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-[#102868] bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
+              <div className="flex items-center gap-2 text-sm font-medium text-[#102868] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                 <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
                 Evidence-Based / Development
               </div>
@@ -74,15 +62,12 @@ export default function HomePage() {
           </div>
 
           {/* Right Side Image/Placeholder */}
-          <div className="flex-1 relative w-full h-[400px]">
+          <div className="flex-1 relative w-full h-[350px] md:h-[450px]">
             <div className="w-full h-full bg-gray-200 rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative">
-              <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center relative">
-                <svg className="w-32 h-32 text-gray-500 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                <div className="absolute inset-0 bg-blue-900/10 mix-blend-multiply"></div>
-              </div>
+              <img src="/hero-building.png" alt="Parliament Building" className="w-full h-full object-cover absolute inset-0" />
               
               {/* Overlay Box */}
-              <div className="absolute bottom-6 right-6 left-6 md:left-auto md:w-64 bg-white/95 backdrop-blur rounded-xl p-5 shadow-lg border border-white">
+              <div className="absolute bottom-6 right-6 left-6 md:left-auto md:w-72 md:bottom-8 md:right-8 bg-white/95 backdrop-blur rounded-xl p-5 shadow-lg border border-white">
                 <p className="text-[#102868] font-bold leading-snug">Building a statistical future for a stronger India</p>
                 <div className="w-12 h-1 bg-orange-500 mt-3 rounded-full"></div>
               </div>
@@ -101,13 +86,13 @@ export default function HomePage() {
             — Access Your Learning Portal
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Officer Card */}
-            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-8 border-l-[6px] border-orange-500 flex flex-col">
+            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 md:p-8 border-l-[6px] border-orange-500 flex flex-col">
               <div className="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center text-[#102868] mb-6">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Officer Learning Dashboard</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">Officer Learning Dashboard</h3>
               <p className="text-gray-600 mb-8 flex-1">
                 Access personalized learning recommendations, competency insights, assessments, and learning progress.
               </p>
@@ -126,11 +111,11 @@ export default function HomePage() {
             </div>
 
             {/* Admin Card */}
-            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-8 border-l-[6px] border-orange-500 flex flex-col">
+            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 md:p-8 border-l-[6px] border-orange-500 flex flex-col">
               <div className="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center text-[#102868] mb-6">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Administrator Dashboard</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">Administrator Dashboard</h3>
               <p className="text-gray-600 mb-8 flex-1">
                 Monitor organizational competency gaps, training priorities, course effectiveness, and workforce learning progress.
               </p>
