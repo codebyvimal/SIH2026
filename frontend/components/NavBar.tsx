@@ -40,9 +40,9 @@ export default function NavBar() {
           {/* Right side */}
           <div className="hidden lg:flex items-center space-x-6 text-sm font-medium">
             <Link href="/" className="hover:text-orange-400 transition">Home</Link>
-            <Link href="/" className="hover:text-orange-400 transition">Courses</Link>
-            <Link href="/" className="hover:text-orange-400 transition">Resources</Link>
-            <Link href="/" className="hover:text-orange-400 transition">About</Link>
+            <Link href="/courses" className="hover:text-orange-400 transition">Courses</Link>
+            <Link href="/resources" className="hover:text-orange-400 transition">Resources</Link>
+            <Link href="/about" className="hover:text-orange-400 transition">About</Link>
             
             <div className="h-4 w-px bg-white/30"></div>
             

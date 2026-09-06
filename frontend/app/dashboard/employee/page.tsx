@@ -52,6 +52,18 @@ export default async function EmployeeDashboardPage({
     );
   }
 
+  
+  let deduplicatedGaps: any[] = [];
+  if (dashboardData && dashboardData.gaps) {
+    const domainMap = new Map();
+    dashboardData.gaps.forEach((gap: any) => {
+      if (!domainMap.has(gap.domain)) {
+        domainMap.set(gap.domain, { ...gap });
+      }
+    });
+    deduplicatedGaps = Array.from(domainMap.values());
+  }
+
   const currentProfile = officialsList.find(o => o.official_id === dashboardData!.official_id) || officialsList[0];
 
   const domainLabels: Record<string, string> = {
@@ -103,7 +115,7 @@ export default async function EmployeeDashboardPage({
         <div className="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
           <h2 className="text-lg font-bold text-[#102868] mb-6">Competency Profile</h2>
           <div className="space-y-6 mb-6">
-            {dashboardData.gaps.map((gap: any) => {
+            {deduplicatedGaps.map((gap: any) => {
               const label = domainLabels[gap.domain] || gap.domain;
               const current = gap.current || 0;
               const target = gap.required || 0;
@@ -219,10 +231,10 @@ export default async function EmployeeDashboardPage({
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-500">{domainLabels[rec.domain] || rec.domain}</span>
                   <span className="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold">Highly Relevant</span>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">{rec.course_title}</h3>
-                <p className="text-sm text-gray-600 mb-2">Addresses your gap in {domainLabels[rec.domain] || rec.domain} to reach the target level of {rec.target_level || '3.5'}.</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">{rec.course}</h3>
+                <p className="text-sm text-gray-600 mb-2">{rec.why}</p>
                 <div className="flex gap-4 text-xs text-gray-500 font-medium">
-                  <span>⏱️ 2h 30m</span>
+                  <span>⏱️ {rec.duration_hours ? `${rec.duration_hours}h` : "2h 30m"}</span>
                   <span>📊 Intermediate</span>
                 </div>
               </div>

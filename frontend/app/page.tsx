@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import NavBar from '@/components/NavBar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -64,7 +65,7 @@ export default function HomePage() {
           {/* Right Side Image/Placeholder */}
           <div className="flex-1 relative w-full h-[350px] md:h-[450px]">
             <div className="w-full h-full bg-gray-200 rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative">
-              <img src="/hero-building.png" alt="Parliament Building" className="w-full h-full object-cover absolute inset-0" />
+              <Image src="/hero-building.png" alt="Parliament Building" fill className="object-cover" priority />
               
               {/* Overlay Box */}
               <div className="absolute bottom-6 right-6 left-6 md:left-auto md:w-72 md:bottom-8 md:right-8 bg-white/95 backdrop-blur rounded-xl p-5 shadow-lg border border-white">
