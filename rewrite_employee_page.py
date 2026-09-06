@@ -1,116 +1,17 @@
+with open('frontend/app/dashboard/employee/page.tsx', 'r') as f:
+    content = f.read()
+
+import re
+import_block = """import { User, ArrowRight, CheckCircle, Target, AlertCircle, PlayCircle, BarChart2 } from 'lucide-react';
 import Link from 'next/link';
-import { User, ArrowRight, CheckCircle, Target, AlertCircle, PlayCircle, BarChart2 } from 'lucide-react';
-import type { EmployeeDashboard } from '@/types/schemas';
 import GapChart from '@/components/dashboard/GapChart';
 import CourseCards from '@/components/dashboard/CourseCards';
+"""
+content = re.sub(r"import \{ User.*?recharts';\n", import_block, content, flags=re.DOTALL)
 
-interface OfficialItem {
-  official_id: string;
-  role: string;
-  dept: string;
-  experience_years: number;
-  education: string;
-}
-
-export default async function EmployeeDashboardPage({
-  searchParams,
-}: {
-  searchParams: { official_id?: string }
-}) {
-  const API_BASE_SERVER = process.env.INTERNAL_API_BASE || 'http://127.0.0.1:8000/api/v1';
-  
-  let officialsList: OfficialItem[] = [];
-  let dashboardData: EmployeeDashboard | null = null;
-  let errorMsg: string | null = null;
-
-  try {
-    const resOff = await fetch(`${API_BASE_SERVER}/officials`, { cache: 'no-store' });
-    if (!resOff.ok) throw new Error('Failed to fetch officials list');
-    officialsList = await resOff.json();
-
-    if (officialsList.length === 0) {
-      errorMsg = 'No officials found. Please register an official first.';
-    } else {
-      const officialToLoad = searchParams?.official_id || officialsList[0].official_id;
-      const resDash = await fetch(`${API_BASE_SERVER}/dashboard/employee/${officialToLoad}`, { cache: 'no-store' });
-      
-      if (!resDash.ok) throw new Error('Failed to load dashboard data');
-      dashboardData = await resDash.json();
-    }
-  } catch (err: any) {
-    errorMsg = err.message || 'An error occurred while fetching dashboard data.';
-  }
-
-  if (errorMsg || !dashboardData) {
-    return (
-      <div className="min-h-screen bg-transparent font-sans flex items-center justify-center">
-        <div className="p-8 text-center text-red-500">
-          <p className="font-semibold text-lg">{errorMsg || 'Failed to load dashboard'}</p>
-          <Link href="/onboarding" className="mt-6 inline-block px-6 py-2 bg-[#102868] text-white rounded-lg">
-            Register a new official
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const domainLabels: Record<string, string> = {
-    digital_tools: 'Digital Tools',
-    statistical_methods: 'Statistical Methods',
-    data_management: 'Data Management',
-    domain_knowledge: 'Domain Knowledge',
-  };
-
-  let deduplicatedGaps: any[] = [];
-  if (dashboardData && dashboardData.gaps) {
-    const domainMap = new Map();
-    dashboardData.gaps.forEach((gap: any) => {
-      if (!domainMap.has(gap.domain)) {
-        domainMap.set(gap.domain, { ...gap });
-      }
-    });
-    deduplicatedGaps = Array.from(domainMap.values());
-  }
-
-  const currentProfile = officialsList.find(o => o.official_id === dashboardData!.official_id) || officialsList[0];
-
-  return (
-    <main className="mx-auto max-w-7xl p-6 bg-transparent min-h-screen text-gray-800">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#102868]">Officer Learning Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-2">Track your competencies and personalized learning journey</p>
-      </div>
-
-      {/* Top Profile Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8 flex flex-col md:flex-row">
-        <div className="p-6 flex items-center gap-6 md:w-2/3 border-b md:border-b-0 md:border-r border-gray-100">
-          <div className="w-20 h-20 bg-[#102868] text-white rounded-full flex items-center justify-center text-3xl font-bold shrink-0">
-            <User size={40} />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">Officer {currentProfile.official_id.split('-')[0].toUpperCase()}</h2>
-            <p className="text-sm font-semibold text-[#102868]">{currentProfile.role}</p>
-            <p className="text-sm text-gray-500 mb-2">{currentProfile.dept}</p>
-            <div className="flex gap-4 text-sm mt-2">
-              <div className="bg-gray-100 px-3 py-1 rounded-full">
-                <span className="text-gray-500">Education:</span> <span className="font-semibold">{currentProfile.education}</span>
-              </div>
-              <div className="bg-gray-100 px-3 py-1 rounded-full">
-                <span className="text-gray-500">Experience:</span> <span className="font-semibold">{currentProfile.experience_years} Year{currentProfile.experience_years !== 1 ? 's' : ''}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-blue-50 p-6 md:w-1/3 flex flex-col justify-center relative">
-          <h3 className="text-[#102868] font-bold mb-2 z-10">Your Learning Journey</h3>
-          <p className="text-sm text-blue-800 z-10">Build the right skills to advance your career and contribute to national development.</p>
-          <div className="absolute right-4 bottom-4 text-blue-200 opacity-50">
-            <ArrowRight size={80} />
-          </div>
-        </div>
-      </div>
-
-      {/* Middle Row */}
+middle_row_start = content.find('{/* Middle Row */}')
+if middle_row_start != -1:
+    new_content = """{/* Middle Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         
         {/* Left Panel: Competency Profile */}
@@ -292,3 +193,7 @@ export default async function EmployeeDashboardPage({
     </main>
   );
 }
+"""
+    content = content[:middle_row_start] + new_content
+    with open('frontend/app/dashboard/employee/page.tsx', 'w') as f:
+        f.write(content)
